@@ -123,6 +123,7 @@ export const SocketProvider: React.FC<{
     dispatch(
       addPlayer({
         playerId,
+        status,
         managerName,
         initialCredits,
         currentCredits,
