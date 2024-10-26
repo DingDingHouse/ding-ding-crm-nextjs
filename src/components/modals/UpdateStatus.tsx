@@ -28,7 +28,7 @@ const UpdateStatus = ({ id, closeModal,prevStatus }: any) => {
         <>
             <form
                 onSubmit={(e)=>handleSubmit(e)}
-                className="grid grid-cols-2 md:gap-4 overflow-hidden px-5"
+                className="grid grid-cols-2 md:gap-4 overflow-hidden lg:px-5"
             >
                 <p className="text-left font-light  dark:text-white">Status : </p>
                 <div className="flex gap-2 md:gap-5 items-center">
@@ -55,7 +55,7 @@ const UpdateStatus = ({ id, closeModal,prevStatus }: any) => {
                         <label htmlFor="inactive" className="text-red-600">Inactive</label>
                     </div>
                 </div>
-                <div className="col-span-2 flex justify-center mt-2">
+                <div className="col-span-2 flex justify-center mt-4">
                     <button
                         type="submit"
                         className="text-center flex justify-center px-8 hover:bg-opacity-45 items-center gap-2  mx-auto bg-[#27a5ff]  text-white text-xl rounded-md p-2 font-light  transition-all duration-200 ease-in-out"

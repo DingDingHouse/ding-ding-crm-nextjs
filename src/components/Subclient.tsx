@@ -5,14 +5,14 @@ import Table from './Table'
 import { getSubordinateClients } from '@/utils/action'
 
 const Subclient = ({ subordinates_id, page }: any) => {
-    const [data, setData] = useState([])
+    const [data, setData] = useState<any>([])
     const [load,setLoad]=useState(false)
     const handelSubordinates = async () => {
         try {
             setLoad(true)
             const subordinates = await getSubordinateClients(subordinates_id, page)
             if (subordinates) {
-                setData(subordinates?.data?.subordinates)
+                setData(subordinates?.data)
             }
             setLoad(false)
         } catch (error) {
@@ -22,8 +22,8 @@ const Subclient = ({ subordinates_id, page }: any) => {
 
     useEffect(() => {
        handelSubordinates() 
-    },[subordinates_id,page])
-
+    }, [subordinates_id, page])
+    
     const tableData = {
         Thead: ['username', 'status', 'role', 'redeem', 'recharge', 'credits', 'action'],
         Tbody: ['username', 'status', 'role', 'totalRedeemed', 'totalRecharged', 'credits']
@@ -33,7 +33,7 @@ const Subclient = ({ subordinates_id, page }: any) => {
             <div className='pb-5'>
                 <Search />
             </div>
-            <Table data={data} tableData={tableData} />
+            <Table paginationData={{currentPage:data?.currentPage,totalPage:data?.totalPages}} data={data?.subordinates}  tableData={tableData} />
         </div>
     )
 }

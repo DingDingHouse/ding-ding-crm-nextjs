@@ -6,25 +6,31 @@ export default function middleware(req: NextRequest) {
   const loggedin = req.cookies.get("userToken");
   const { pathname } = req.nextUrl;
 
+  // Redirect to login if user is not logged in
   if (!loggedin && pathname !== "/login") {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  if (loggedin && pathname === "/login") {
-    return NextResponse.redirect(new URL(`/`, req.url));
+  if (loggedin) {
+    const decodedToken: any = jwt.decode(loggedin.value) as { exp?: number, role?: string };
+
+    if (decodedToken?.exp && Date.now() >= decodedToken.exp * 1000) {
+      const response = NextResponse.redirect(new URL("/login", req.url));
+      response.cookies.set("userToken", "", { maxAge: -1, path: '/' });
+      return response;
+    }
+    if (pathname === "/login") {
+      return NextResponse.redirect(new URL(`/`, req.url));
+    }
+
+    if (
+      decodedToken?.role !== "company" &&
+      ["/game", "/transaction/all", "/clients/all", "/add-game"].includes(pathname)
+    ) {
+      return NextResponse.redirect(new URL(`/`, req.url));
+    }
   }
 
-  // Check if the user's designation is not 'company' and redirect them away from certain routes
-  const decodedToken = loggedin ? jwt.decode(loggedin.value) as { role?: string } : null;
-  
-  if (
-    decodedToken?.role !== "company" &&
-    ["/game", "/transaction/all", "/clients/all", "/add-game"].includes(pathname)
-  ) {
-    return NextResponse.redirect(new URL(`/`, req.url));
-  }
-
-  // For any other cases return
   return NextResponse.next();
 }
 

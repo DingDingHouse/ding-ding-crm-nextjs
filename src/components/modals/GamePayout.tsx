@@ -10,7 +10,6 @@ import toast from "react-hot-toast";
 import Modal from "../Modal";
 import { FaCircle } from "react-icons/fa6";
 import Threedots from "../svg/Threedots";
-import Delete from "../svg/Delete";
 import Loader from "@/utils/Load";
 import DeleteUser from "./DeleteUser";
 
@@ -46,7 +45,6 @@ const GamePayout = ({ tagname, platform, closeModal }: any) => {
         }
         fileInputRef.current.value = null;
         setPayout(null);
-        closeModal()
         toast.success(response.message);
         fetchPayoutData(tagname, platform);
     };
@@ -60,6 +58,7 @@ const GamePayout = ({ tagname, platform, closeModal }: any) => {
         }
         toast.success(response.message);
         setSubmodalOpen(false);
+        fetchPayoutData(tagname, platform);
     };
 
     const handelCloseModal = () => {
@@ -85,6 +84,7 @@ const GamePayout = ({ tagname, platform, closeModal }: any) => {
         }
         toast.success(response.message);
         fetchPayoutData(tagname, platform);
+        setOpenIndex(null)
     };
 
     const fetchPayoutData = async (tagname: string, platform: string) => {
@@ -125,6 +125,7 @@ const GamePayout = ({ tagname, platform, closeModal }: any) => {
         setOpenIndex(null);
     }
     const buttons = ['Make Active', 'Delete']
+    const indexs=[0,1]
     return (
         <div className="flex flex-col gap-4">
             <form
@@ -133,18 +134,17 @@ const GamePayout = ({ tagname, platform, closeModal }: any) => {
             >
                 <label
                     htmlFor="file-upload"
-                    className={`border-[2px] border-[#2826265f] text-[#2826265f] hover:border-black hover:text-black  dark:border-[#dfdfdf4a] dark:text-[#dfdfdf4a] dark:hover:text-white transition-all duration-150 dark:hover:border-white rounded-xl w-full text-center py-8 cursor-pointer font-light flex justify-center ${payout && "!text-white border-white"
-                        }`}
+                    className={`border-[2px] border-gray-300  hover:border-black hover:text-black  dark:border-[#dfdfdf4a] dark:text-[#dfdfdf4a] dark:hover:text-white transition-all duration-150 dark:hover:border-white rounded-xl w-full text-center py-8 cursor-pointer font-light flex justify-center`}
                 >
                     {payout ? (
-                        <span className="flex">
-                            <span className="my-auto mr-2 text-2xl">
+                        <span className="flex text-gray-700 dark:text-white">
+                            <span className="my-auto mr-2 t text-2xl">
                                 <MdOutlineCloudDone />
                             </span>
                             file Uploaded
                         </span>
                     ) : (
-                        <span className="flex">
+                        <span className="flex text-gray-700 dark:text-white">
                             <span className="my-auto mr-2 text-2xl">
                                 <MdOutlineDriveFolderUpload />
                             </span>
@@ -162,7 +162,7 @@ const GamePayout = ({ tagname, platform, closeModal }: any) => {
                     ref={fileInputRef}
                 />
                 {payout && (
-                    <button className="px-6 py-2 editgradient !text-black ">
+                    <button className="px-6 py-2 bg-[#27a5ff] rounded-lg hover:opacity-60 text-white">
                         Submit
                     </button>
                 )}
@@ -196,12 +196,12 @@ const GamePayout = ({ tagname, platform, closeModal }: any) => {
                                     </div>
                                 </div>
                                 {(
-                                    <div className='flex items-center justify-start pl-5 space-x-5'>
+                                    <div className={`flex items-center ${item?.isActive&&'hidden'} justify-start pl-5 space-x-5`}>
                                         <div className='relative'>
                                             <button onClick={() => handleOpen(index)} className=' hover:bg-gray-200 dark:hover:bg-black transition-all text-[#27a5ff] p-1 rounded-lg '>
                                                 <Threedots />
                                             </button>
-                                            <div className={` ${openIndex === index ? 'scale-100' : 'scale-0'} z-[51] transition-all absolute   ${index === 0 ? 'top-[100%]' : 'bottom-0'} right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700`}>
+                                            <div className={` ${openIndex === index ? 'scale-100' : 'scale-0'} z-[51] transition-all absolute   ${indexs?.includes(index) ? 'top-[100%]' : 'bottom-0'} right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700`}>
                                                 <ul className="py-2 text-sm text-gray-700 px-2 dark:text-gray-200" aria-labelledby="dropdownDelayButton">
                                                     {
                                                         buttons?.map((button, index) => (

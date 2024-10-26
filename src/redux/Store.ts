@@ -1,9 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import { reduxSlice } from './ReduxSlice'
 import activeUsersReducers from './features/activeUsersSlice'
+import { reduxSlice } from './ReduxSlice';
 
 const rootReducer = combineReducers({
-  activeUsers: activeUsersReducers
+  activeUsers: activeUsersReducers,
+  globlestate: reduxSlice.reducer
 })
 
 export const makeStore = () => {

@@ -9,12 +9,13 @@ import { getUserReport } from '@/utils/action'
 import toast from 'react-hot-toast'
 import Cookies from 'js-cookie'
 import jwt from 'jsonwebtoken'
+import Loader from '@/utils/Load'
 
 const Dashboard = ({ subordinates_id }: any) => {
     const [reporttype, setReportType] = useState('daily')
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState<any>({});
-    const card =data?.role === 'player' ? [
+    const card = data?.role === 'player' ? [
         {
             title: 'Recharge',
             amount: data?.recharge || 0,
@@ -25,20 +26,20 @@ const Dashboard = ({ subordinates_id }: any) => {
             amount: data?.redeem || 0,
             icon: <Redeem />
         },
-        ] : subordinates_id&&data?.role !== 'player' ? [{
-            title: 'Recharge',
-            amount: data?.recharge || 0,
-            icon: <Recharge />
-        },
-        {
-            title: 'Redeem',
-            amount: data?.redeem || 0,
-            icon: <Redeem />
-        },{
-            title: 'Clients',
-            amount: data?.users ? Object?.values(data?.users)?.reduce((acc: any, value: any) => acc + value, 0) : 0,
-            icon: <Clients />
-        }] : [
+    ] : subordinates_id && data?.role !== 'player' ? [{
+        title: 'Recharge',
+        amount: data?.recharge || 0,
+        icon: <Recharge />
+    },
+    {
+        title: 'Redeem',
+        amount: data?.redeem || 0,
+        icon: <Redeem />
+    }, {
+        title: 'Clients',
+        amount: data?.users ? Object?.values(data?.users)?.reduce((acc: any, value: any) => acc + value, 0) : 0,
+        icon: <Clients />
+    }] : [
         {
             title: 'Recharge',
             amount: data?.recharge || 0,
@@ -92,24 +93,33 @@ const Dashboard = ({ subordinates_id }: any) => {
                 </div>
                 <div className='grid grid-cols-12 pt-5 gap-4'>
                     {
-                        card?.map((item, ind) => (
-                            <div key={ind} className='p-4 rounded-lg bg-white dark:bg-gray-700 col-span-6 lg:col-span-4 xl:col-span-3'>
-                                <div className='flex justify-start space-x-2 items-center'>
-                                    {item?.icon}
-                                    <div className='dark:text-white text-xl text-black'>{item?.title}</div>
+                        loading ? Array.from({ length: 4 }).map((_, index) => (
+                            <div
+                                key={index}
+                                className="p-4 rounded-lg bg-gray-300 dark:bg-gray-700 h-[143px] animatepulse col-span-6 lg:col-span-4 xl:col-span-3"
+                            ></div>
+                        )) :
+                            card?.map((item, ind) => (
+                                <div key={ind} className='p-4 rounded-lg bg-white dark:bg-gray-700 col-span-6 lg:col-span-4 xl:col-span-3'>
+                                    <div className='flex justify-start space-x-2 items-center'>
+                                        {item?.icon}
+                                        <div className='dark:text-white text-xl text-black'>{item?.title}</div>
+                                    </div>
+                                    <div className='text-5xl text-[#27a5ff] pt-4'>{item?.amount}</div>
                                 </div>
-                                <div className='text-5xl text-[#27a5ff] pt-4'>{item?.amount}</div>
-                            </div>
-                        ))
+                            ))
                     }
                 </div>
-                <div className='pt-5 grid grid-cols-12 gap-4 h-full'>
-                    <RecentTransaction recentTransactions={data?.transactions} />
-                    <div className='col-span-5 p-3 rounded-lg  bg-white dark:bg-gray-700 '>
-                        <div className='text-xl dark:text-white'>Most Played Games</div>
 
-                    </div>
-                </div>
+              
+                        <div className='pt-5 pb-3 grid grid-cols-12 gap-4 h-full'>
+                            <RecentTransaction recentTransactions={data?.transactions} />
+                            <div className='col-span-12 lg:col-span-5 p-3 rounded-lg  bg-white dark:bg-gray-700 '>
+                                <div className='text-xl dark:text-white'>Most Played Games</div>
+
+                            </div>
+                        </div>
+
             </div>
         </div>
     )

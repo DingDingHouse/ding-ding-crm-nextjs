@@ -135,7 +135,7 @@ const page = () => {
             <div className="h-screen w-full relative">
                 <form
                     onSubmit={(e) => handleSubmit(e)}
-                    className="grid grid-cols-2 gap-x-4 gap-y-6 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] overflow-hidden w-[90%] md:w-[70%] lg:w-[50%] m-auto px-8 py-6 rounded-xl bg-white dark:bg-gray-700 text-black dark:text-white border-[#27a5ff] border-[3px]"
+                    className="grid grid-cols-2 gap-x-2 lg:gap-x-4 gap-y-6 absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] overflow-hidden w-[98%] md:w-[70%] lg:w-[50%] m-auto px-2 lg:px-8 py-6 rounded-xl bg-white dark:bg-gray-700 text-black dark:text-white border-[#27a5ff] border-[3px]"
                 >
                     <p className="text-left font-light">Name :</p>
                     <input

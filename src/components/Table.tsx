@@ -11,8 +11,9 @@ import Image from 'next/image'
 import EditGames from './modals/EditGames'
 import GamePayout from './modals/GamePayout'
 import Link from 'next/link'
+import Pagination from './Pagination'
 
-const Table = ({ data, tableData, page, gamePlatform }: any) => {
+const Table = ({ data, tableData, page, gamePlatform,paginationData }: any) => {
     const [openIndex, setOpenIndex] = useState(null); // State to track which dropdown is open
     const [modalType, setModalType] = useState({ Type: "", id: '', prevStatus: '', Username: '', PrevGameData: null,TagName:'',platform:'',gameName:'' })
     const [openmodal, setOpenModal] = useState(false)
@@ -107,7 +108,7 @@ const Table = ({ data, tableData, page, gamePlatform }: any) => {
 
                                     return (
                                         <td key={td} className={tdClass}>
-                                            {td === "updatedAt" ? new Date(item[td]).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : td === 'thumbnail' ? <Image src={item[td]} alt={item[td]} width={400} height={400} className='w-[80px]' />:td==='username'?<Link href={`/clients/${item?._id}`} className='hover:text-[#27a5ff] hover:scale-110 inline-block transition-all'>{item[td]}</Link> : item[td]}
+                                            {td === "updatedAt" ? new Date(item[td]).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : td === 'thumbnail' ? <Image src={item[td]} alt={item[td]} width={400} height={400} className='w-[80px]' />:td==='username'?<Link href={`/clients/${item?._id}`} className='hover:text-[#27a5ff] hover:scale-110 inline-block transition-all'>{item[td]}</Link>:item[td]}
                                         </td>
                                     );
                                 })}
@@ -141,7 +142,9 @@ const Table = ({ data, tableData, page, gamePlatform }: any) => {
                         ))}
                     </tbody>
                 </table>
+                {/* Pagination */}
             </div>
+            {page!=='game'&&!popup?.includes(paginationData?.totalPage)&&<Pagination paginationData={paginationData} />}
             {openIndex !== null && <div onClick={() => handleOpen(null)} className='bg-black fixed top-0 bg-opacity-35 left-0 w-full h-screen z-[50]'></div>}
             {openmodal && <Modal closeModal={handelCloseModal} modaltype={modalType} >{ModalContent}</Modal>}
         </>

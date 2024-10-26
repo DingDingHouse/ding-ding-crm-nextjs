@@ -10,6 +10,8 @@ import Setting from "../svg/Setting";
 import Modal from "../Modal";
 import Add_Platform from "../modals/Add_Platform";
 import Maintenance from "../modals/Maintenance";
+import { useAppDispatch } from "@/utils/hooks";
+import { setSidebarshow } from "@/redux/ReduxSlice";
 
 const Header = () => {
   const [user, setUser] = useState<{ username: string; role: string; credits: number; } | null>(null);
@@ -17,6 +19,7 @@ const Header = () => {
   const [opensetting, setOpenSetting] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const dispatch=useAppDispatch()
   const [modaltype, setModalType] = useState('');
   useEffect(() => {
     setMounted(true);
@@ -84,7 +87,7 @@ const Header = () => {
   return (
     <>
       <div className="w-full mx-auto flex bg-gray-100 dark:bg-gray-800 px-5 py-3 justify-between items-center">
-        <button className="lg:hidden">
+        <button className="lg:hidden" onClick={()=>dispatch(setSidebarshow(true))}>
           <Hamburger />
         </button>
         <div className="lg:block hidden">
@@ -96,7 +99,7 @@ const Header = () => {
         <div className="flex items-center space-x-4">
           <div className="relative pt-2">
             <button onClick={() => setOpenSetting(!opensetting)} className="dark:text-gray-50 text-gray-700 inline-block" ><Setting /></button>
-            <div className={`${opensetting ? 'scale-100 ' : 'scale-0'} transition-all rounded-xl bg-gray-200  p-2 z-[52] text-base min-w-[200px] right-0 space-y-2 absolute top-[100%] dark:bg-gray-600`}>
+            <div className={`${opensetting ? 'scale-100 ' : 'scale-0'} transition-all rounded-xl bg-gray-200  p-2 z-[52] text-base min-w-[200px]  md:right-0 space-y-2 absolute top-[100%] dark:bg-gray-600`}>
               <button onClick={() => handelOpenModal('Add_Platform')} className="w-full py-1.5 dark:hover:bg-gray-500 hover:bg-gray-300 rounded-md dark:text-white">Add Platform</button>
               <button onClick={() => handelOpenModal('Under_Maintenance')} className="w-full py-1.5  dark:hover:bg-gray-500 hover:bg-gray-300 rounded-md dark:text-white">Under Maintenance</button>
             </div>

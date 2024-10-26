@@ -32,7 +32,7 @@ const Recharge = ({ id, closeModal,modalType }: any) => {
         <>
             <form
                 onSubmit={(e)=>handleSubmit(e)}
-                className="grid grid-cols-2 space-x-2 md:space-x-0 md:gap-4 overflow-hidden px-5"
+                className="grid grid-cols-2 space-x-2 md:space-x-0 md:gap-4 overflow-hidden lg:px-5"
             >
                 <p className="text-left font-light dark:text-white">{modalType} Amount : </p>
                 <input

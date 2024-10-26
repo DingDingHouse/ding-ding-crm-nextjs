@@ -6,17 +6,12 @@ import { passwordRegex } from "@/utils/regex";
 import Loader from "@/utils/Load";
 
 const Password = ({ id,closeModal}:any) => {
-  const [existingPassword, setExistingPassword] = useState("");
   const [password, setPassword] = useState("");
   const [reEnterPassword, setReEnterPassword] = useState("");
   const [load, setLoad] = useState(false);
 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-    if (existingPassword === "" || password === "" || reEnterPassword === "") {
-      return toast.error("All fileds are required!");
-    }
-
     if (password !== reEnterPassword) {
       return toast.error("Both the passwords do not match");
     }
@@ -28,7 +23,7 @@ const Password = ({ id,closeModal}:any) => {
     }
 
     setLoad(true);
-    const response:any = await editPassword(existingPassword, password, id);
+    const response:any = await editPassword(password, id);
     setLoad(false);
     if (response?.error) {
       return toast.error(response.error);
@@ -48,15 +43,8 @@ const Password = ({ id,closeModal}:any) => {
     <>
       <form
         onSubmit={(e)=>handleSubmit(e)}
-        className="grid grid-cols-2 md:gap-4 overflow-hidden px-5"
+        className="grid grid-cols-2 md:gap-4 overflow-hidden lg:px-5"
       >
-        <p className="text-left font-light dark:text-white">Existing Password :</p>
-        <input
-          name="existingPassword"
-          onChange={(e) => setExistingPassword(e.target.value)}
-          value={existingPassword}
-          className="text-left font-extralight text-gray-400 focus:outline-none bg-transparent w-full border-b-[1px] border-gray-500 dark:border-[#dfdfdf2e] "
-        />
         <p className="text-left font-light dark:text-white">New Password :</p>
         <div className="flex justify-between w-full gap-2">
           <input

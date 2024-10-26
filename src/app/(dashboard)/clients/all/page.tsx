@@ -17,7 +17,7 @@ const page = async ({ searchParams }:any) => {
             <div className='pb-5'>
                 <Search />
             </div>
-            <Table data={clients?.data?.subordinates} tableData={tableData} />
+            <Table paginationData={{currentPage:clients?.data?.currentPage,totalPage:clients?.data?.totalPages}} data={clients?.data?.subordinates} tableData={tableData} />
         </div>
     )
 }

@@ -28,26 +28,26 @@ const Subordinates = ({ subordinateData, id ,page}: any) => {
     return (
         <>
             <div className="min-h-full h-auto ">
-                <div className="w-[95%] md:w-[100%] m-auto py-6 flex flex-col md:flex-row justify-between">
-                    <div className="flex space-x-2">
+                <div className="md:w-[100%] m-auto py-6 flex flex-col md:flex-row justify-between">
+                    <div className="flex lg:space-x-2">
                         <div
                             onClick={() => {
                                 router.back();
                             }}
-                            className="dark:text-white cursor-pointer text-4xl my-auto opacity-40"
+                            className="dark:text-white cursor-pointer text-3xl lg:text-4xl my-auto opacity-40"
                         >
                             <IoChevronBackOutline />
                         </div>
                         <div>
-                            <h1 className="text-2xl text-black font-semibold dark:text-white capitalize">
+                            <h1 className="text-xl lg:text-2xl text-black font-semibold dark:text-white capitalize">
                                 {subordinateData?.username}
                             </h1>
-                            <p className="text-md font-extralight text-black dark:text-gray-400 capitalize">
+                            <p className="text-sm lg:text-md font-extralight text-black dark:text-gray-400 capitalize">
                                 <span>{subordinateData?.role}</span>
                             </p>
                         </div>
                     </div>
-                    <div className="flex gap-5 mt-5 ">
+                    <div className="flex gap-2  text-sm md:text-base lg:gap-5 mt-5 ">
                         <button
                             onClick={() => {
                                 setOption("report");

@@ -2,12 +2,14 @@ import Loader from "@/utils/Load";
 import { UpdateMaintenance, getToggle } from "@/utils/action";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import Modal from "../Modal";
 
 const Maintenance = ({ closeModal, fetchDate }: any) => {
     const [startDate, setStartDate] = useState("");
     const [ismaintennence, setIsMaintenance] = useState(false)
     const [countdown, setCountdown] = useState({ day: 0, hour: 0, minute: 0, second: 0 })
-    const [load,setLoad]=useState(false)
+    const [load, setLoad] = useState(false)
+    const [openmodal, setOpenModal] = useState(false)
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setStartDate(e.target.value);
     };
@@ -15,17 +17,22 @@ const Maintenance = ({ closeModal, fetchDate }: any) => {
     const fetchAvilableDate = async () => {
         setLoad(true)
         const response = await getToggle();
-        const availableDate = new Date(response.availableAt);
-        console.log(response)
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        setIsMaintenance(response?.underMaintenance)
-        // startCountdown(new Date(availableDate));
-        startCountdown(new Date("2024-10-22T15:50:00.000Z"));
-        setLoad(false)
-        if (availableDate.getTime() === today.getTime()) {
-            updateToggleValue("null");
+        if (response) {
+            console.log(response, "asdfasd")
+            const today = new Date();
+            today?.setHours(0, 0, 0, 0);
+
+            const availableDate = new Date(response.availableAt);
+            setIsMaintenance(response?.underMaintenance)
+            if (availableDate) {
+                startCountdown(new Date(availableDate));
+            }
+            if (availableDate?.getTime() === today.getTime()) {
+                updateToggleValue("null");
+            }
         }
+        setLoad(false)
+
     };
 
     useEffect(() => {
@@ -50,16 +57,19 @@ const Maintenance = ({ closeModal, fetchDate }: any) => {
         if (startDate !== "null") {
             availableAt = new Date(startDate).toISOString();
         }
+        setLoad(true)
         const response: any = await UpdateMaintenance(availableAt);
         if (response?.error) {
-            return toast.error(response?.error);
+            toast.error(response?.error);
+            closeModal();
         }
         if (response?.availableAt) {
             closeModal()
-            toast.success(response?.message || "Maintenance scheduled successfully");
+            toast.success("Maintenance scheduled successfully");
         } else {
-
+            closeModal(); 
         }
+        setLoad(false)
     };
 
     function startCountdown(targetDate: Date) {
@@ -73,7 +83,7 @@ const Maintenance = ({ closeModal, fetchDate }: any) => {
             // If the countdown is over, clear the interval and return
             if (difference <= 0) {
                 clearInterval(interval);
-                console.log('Countdown completed!');
+                fetchAvilableDate();
                 return;
             }
 
@@ -90,9 +100,28 @@ const Maintenance = ({ closeModal, fetchDate }: any) => {
         }, 1000);
     }
 
+    const handelCloseModal = () => {
+        setOpenModal(false)
+    }
+
+    const HandelStopTimer = () => {
+        updateToggleValue('null');
+        closeModal();
+    }
+
+    const ModalContent = (
+        <div>
+            <div className="text-gray-600 dark:text-white text-center text-base">Are You Sure You Want to Stop Countdown?</div>
+            <div className="flex items-center justify-center space-x-10 pt-5">
+                <button onClick={handelCloseModal} className="bg-gray-400 px-6 py-1.5 hover:bg-opacity-65 transition-all rounded-md">No</button>
+                <button onClick={HandelStopTimer} className="bg-red-600 px-6 py-1.5 hover:bg-opacity-65 text-white transition-all rounded-md">Yes</button>
+            </div>
+        </div>
+    )
+
     return (
         <div>
-            {ismaintennence ? <div className="flex items-center justify-center">
+            {!ismaintennence ? <div className="flex items-center justify-center">
                 <form onSubmit={(e) => handleSubmit(e)} className="flex gap-5 items-center">
                     {(
                         <input
@@ -104,23 +133,40 @@ const Maintenance = ({ closeModal, fetchDate }: any) => {
                         />
                     )}
                     <button
-                        className="text-center flex justify-center px-4 items-center gap-2 bg-gradient-to-r from-[#8C7CFD] hover:from-[#BC89F1] hover:to-[#8C7CFD] to-[#BC89F1] mx-auto text-white text-xl rounded-md p-2 font-light hover:shadow-[0_30px_10px_-15px_rgba(0,0,0,0.2)] transition-all duration-200 ease-in-out"
+                        className="text-center flex justify-center px-6 hover:bg-opacity-65 items-center gap-2  mx-auto text-white text-xl rounded-md p-2 font-light bg-[#27a5ff] transition-all duration-200 ease-in-out"
                         type="submit"
                     >
                         {"Submit"}
                     </button>
                 </form>
             </div> :
-                <div className="flex items-center justify-center space-x-3 text-2xl">
-                    <span className="bg-[#27a5ff] px-4 rounded-xl text-white bg-opacity-50 border-[3px] border-[#27a5ff] py-2">{countdown?.day} </span>
-                    <span className="text-white">:</span>
-                    <span className="bg-[#27a5ff] px-4 rounded-xl text-white bg-opacity-50 border-[3px] border-[#27a5ff] py-2">{countdown?.hour} </span>
-                    <span className="text-white">:</span>
-                    <span className="bg-[#27a5ff] px-4 rounded-xl text-white bg-opacity-50 border-[3px] border-[#27a5ff] py-2">{countdown?.minute} </span>
-                    <span className="text-white">:</span>
-                    <span className="bg-[#27a5ff] px-4 rounded-xl text-white bg-opacity-50 border-[3px] border-[#27a5ff] py-2">{countdown?.second}</span>
-                </div>}
-            {load&&<Loader />}
+                <div>
+                    <div>
+                        <p className="pb-8 text-center text-white text-xl font-bold">
+                            Site Is In Maintenance
+                        </p>
+                    </div>
+                    <div className="flex items-center justify-center space-x-3 text-2xl">
+                        <span className="bg-[#27a5ff] px-4 rounded-xl text-white bg-opacity-50 border-[3px] border-[#27a5ff] py-2">{countdown?.day} </span>
+                        <span className="text-white">:</span>
+                        <span className="bg-[#27a5ff] px-4 rounded-xl text-white bg-opacity-50 border-[3px] border-[#27a5ff] py-2">{countdown?.hour} </span>
+                        <span className="text-white">:</span>
+                        <span className="bg-[#27a5ff] px-4 rounded-xl text-white bg-opacity-50 border-[3px] border-[#27a5ff] py-2">{countdown?.minute} </span>
+                        <span className="text-white">:</span>
+                        <span className="bg-[#27a5ff] px-4 rounded-xl text-white bg-opacity-50 border-[3px] border-[#27a5ff] py-2">{countdown?.second}</span>
+                    </div>
+                    <div className="pt-8">
+                        <button
+                            onClick={() => setOpenModal(true)}
+                            className="text-center flex justify-center px-4 items-center gap-2  mx-auto text-white text-xl rounded-md p-2 font-light bg-[#27a5ff] hover:bg-opacity-65 transition-all duration-200 ease-in-out"
+                        >
+                            Stop Countdown
+                        </button>
+                    </div>
+                </div>
+            }
+            {openmodal && <Modal closeModal={handelCloseModal}>{ModalContent}</Modal>}
+            {load && <Loader />}
         </div>
     );
 };

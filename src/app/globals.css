@@ -66,3 +66,12 @@
   .dark{
     background-color: black;
   }
+
+  @keyframes pulse {
+    50% {
+        opacity: .5;
+    }
+}
+.animatepulse {
+    animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

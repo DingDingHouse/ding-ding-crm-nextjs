@@ -4,14 +4,14 @@ import Table from './Table'
 import { getSubordinateTransactions } from '@/utils/action'
 
 const SubclientTransaction = ({ subordinates_id, page }: any) => {
-    const [data, setData] = useState([])
+    const [data, setData] = useState<any>([])
     const [load,setLoad]=useState(false)
     const handelSubordinates = async () => {
         try {
             setLoad(true)
             const Transaction = await getSubordinateTransactions(subordinates_id, page)
             if (Transaction) {
-                setData(Transaction?.data?.transactions)
+                setData(Transaction?.data)
             }
             setLoad(false)
         } catch (error) {
@@ -33,7 +33,7 @@ const SubclientTransaction = ({ subordinates_id, page }: any) => {
             <div className='pb-5'>
                 <Search />
             </div>
-            <Table data={data} tableData={tableData} />
+            <Table paginationData={{currentPage:data?.currentPage,totalPage:data?.totalPages}} data={data?.transactions} tableData={tableData} />
         </div>
     )
 }

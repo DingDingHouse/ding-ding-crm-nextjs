@@ -61,7 +61,7 @@ const EditGames = ({ id, closeModal, platform, prevData }: any) => {
         <>
             <form
                 onSubmit={(e)=>handleSubmit(e)}
-                className="grid grid-cols-2 gap-4 overflow-hidden px-5"
+                className="grid grid-cols-2 gap-y-3 lg:gap-4 overflow-hidden lg:px-5"
             >
                 <p className="text-left font-light dark:text-white ">Name :</p>
                 <input

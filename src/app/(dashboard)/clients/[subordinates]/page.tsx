@@ -7,7 +7,7 @@ const page = async ({ params,searchParams }: any) => {
     const response = await getUserReport(params?.subordinates,'daily');
     return (
         <>
-            <Subordinates page={searchParams?.page} subordinateData={response} id={params?.subordinates} />    
+            <Subordinates  page={searchParams?.page} subordinateData={response} id={params?.subordinates} />    
       </>
   )
 }

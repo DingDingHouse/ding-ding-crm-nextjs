@@ -99,7 +99,7 @@ export const getMyClients = async (page:number) => {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.message);
+      throw new Error(error?.message);
     }
     const data = await response.json();
     return { data };
@@ -158,12 +158,12 @@ export async function generatePassword() {
   }
 }
 
-export const editPassword = async (existingPassword:string, password:string, id:string) => {
+export const editPassword = async (password:string, id:string) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/users/${id}`, {
       method: "PUT",
-      body: JSON.stringify({ password, existingPassword }),
+      body: JSON.stringify({ password}),
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
