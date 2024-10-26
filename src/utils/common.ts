@@ -73,6 +73,7 @@ export interface CurrentGame {
 
 export interface PlayerData {
     playerId: string;
+    status: string,
     managerName: string;
     initialCredits: number;
     currentCredits: number;

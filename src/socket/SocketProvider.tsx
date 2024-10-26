@@ -53,6 +53,7 @@ export const SocketProvider: React.FC<{
           dispatch(
             addPlayer({
               playerId: player.playerId,
+              status: player.status,
               managerName: player.managerName,
               initialCredits: player.initialCredits,
               currentCredits: player.currentCredits,
