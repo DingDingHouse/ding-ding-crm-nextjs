@@ -48,7 +48,7 @@ export const SocketProvider: React.FC<{
       });
 
       socketInstance.on("activePlayers", (activePlayersData) => {
-        activePlayersData.forEach((player:any) => {
+        activePlayersData.forEach((player: any) => {
           dispatch(
             addPlayer({
               playerId: player.playerId,
@@ -170,7 +170,6 @@ export const SocketProvider: React.FC<{
         sessionDuration,
       })
     );
-
   };
 
   const handleExitedGame = (payload: any) => {
