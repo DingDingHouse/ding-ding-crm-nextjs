@@ -1,5 +1,5 @@
+import { CurrentGame, PlayerData } from '@/utils/Types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CurrentGame, PlayerData, SpinData } from '@/utils/common';
 
 interface ActiveUsersState {
     users: Record<string, PlayerData>;

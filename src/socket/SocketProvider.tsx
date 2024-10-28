@@ -7,7 +7,7 @@ import {
   removePlayer,
   updateSpin,
 } from "@/redux/features/activeUsersSlice";
-import { CurrentGame, EventType } from "@/utils/common";
+import { CurrentGame, EventType } from "@/utils/Types";
 import { config } from "@/utils/config";
 import { useAppDispatch } from "@/utils/hooks";
 import { useRouter } from "next/navigation";
@@ -48,12 +48,11 @@ export const SocketProvider: React.FC<{
       });
 
       socketInstance.on("activePlayers", (activePlayersData) => {
-        console.log("Active Players Data:", activePlayersData);
-        activePlayersData.forEach((player) => {
+        activePlayersData.forEach((player:any) => {
           dispatch(
             addPlayer({
               playerId: player.playerId,
-              status: player.status,
+              status: player?.status,
               managerName: player.managerName,
               initialCredits: player.initialCredits,
               currentCredits: player.currentCredits,
@@ -81,7 +80,6 @@ export const SocketProvider: React.FC<{
     }
   }, [token]);
   const handlePlatformEvent = (data: any) => {
-    console.log("Received PLATFORM event:", data);
     switch (data.type) {
       case EventType.ENTERED_PLATFORM:
         handleEnteredPlatform(data.payload);
@@ -133,16 +131,11 @@ export const SocketProvider: React.FC<{
         currentGame,
       })
     );
-
-    toast.success(`${playerId} has entered the platform`);
   };
 
   const handleExitedPlatform = (payload: any) => {
     const { playerId } = payload;
     dispatch(removePlayer({ playerId }));
-    toast(`${playerId} has exited the platform`, {
-      icon: "🚪",
-    });
   };
 
   const handleEnteredGame = (payload: any) => {
@@ -178,15 +171,11 @@ export const SocketProvider: React.FC<{
       })
     );
 
-    toast.success(`${playerId} has entered the game ${gameId}`);
   };
 
   const handleExitedGame = (payload: any) => {
     const { playerId } = payload;
     dispatch(exitGame({ playerId }));
-    toast(`${playerId} has exited the game`, {
-      icon: "🎮",
-    });
   };
 
   const handleUpdatedSpin = (summary: CurrentGame) => {

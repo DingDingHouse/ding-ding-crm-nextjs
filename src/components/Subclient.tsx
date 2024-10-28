@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Search from './Search'
 import Table from './Table'
 import { getSubordinateClients } from '@/utils/action'
+import Loader from '@/utils/Load'
 
 const Subclient = ({ subordinates_id, page }: any) => {
     const [data, setData] = useState<any>([])
@@ -33,7 +34,7 @@ const Subclient = ({ subordinates_id, page }: any) => {
             <div className='pb-5'>
                 <Search />
             </div>
-            <Table paginationData={{currentPage:data?.currentPage,totalPage:data?.totalPages}} data={data?.subordinates}  tableData={tableData} />
+            {load?<Loader/>:<Table paginationData={{ currentPage: data?.currentPage, totalPage: data?.totalPages }} data={data?.subordinates} tableData={tableData} />}
         </div>
     )
 }

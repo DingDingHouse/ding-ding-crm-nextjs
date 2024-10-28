@@ -4,10 +4,11 @@ import Arrow_Right from './svg/Arrow_Right'
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
-const Pagination = ({ paginationData }:any) => {
+const Pagination = ({ paginationData }: any) => {
     const pathname = usePathname()
-    const router=useRouter()
-    const [currentPage, setCurrentPage] = useState<number>(1);
+    const router = useRouter()
+    const [currentPage, setCurrentPage] = useState<number>(paginationData?.currentPage);
+   
     // Function to handle previous page
     const handlePrev = () => {
         if (currentPage > 1) {
@@ -23,27 +24,31 @@ const Pagination = ({ paginationData }:any) => {
     };
 
     useEffect(() => {
-      router?.replace(`${pathname}?page=${currentPage||1}`)
+        router?.replace(`${pathname}?page=${currentPage || 1}&search=${paginationData?.search || ''}`)
     }, [currentPage])
+
+    useEffect(() => {
+        setCurrentPage(paginationData?.currentPage)
+    },[paginationData?.currentPage])
 
     return (
         <div className='flex justify-end dark:text-white text-gray-600 pt-3 pb-4 pr-2'>
             <div className='flex items-center transition-all space-x-2'>
                 <button
                     onClick={handlePrev}
-                    disabled={currentPage === (1||0)}
-                    className={`dark:hover:text-[#27a5ff] hover:text-[#27a5ff] text-black dark:text-white ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={currentPage === (1 || 0)}
+                    className={`dark:hover:text-[#FFD117] hover:text-[#FFD117] text-black dark:text-white ${currentPage === 1 ? 'opacity-50' : ''}`}
                 >
                     <Arrow_Left />
                 </button>
                 <span className='text-sm'>Page</span>
-                <span className='text-[#27a5ff]'>{paginationData?.currentPage||currentPage}</span>
+                <span className='text-[#FFD117]'>{paginationData?.currentPage || currentPage}</span>
                 <span className='text-sm'>Of</span>
-                <span className='text-[#27a5ff]'>{paginationData?.totalPage}</span>
+                <span className='text-[#FFD117]'>{paginationData?.totalPage}</span>
                 <button
                     onClick={handleNext}
                     disabled={currentPage === paginationData?.totalPage}
-                    className={`dark:hover:text-[#27a5ff] hover:text-[#27a5ff] text-black dark:text-white ${currentPage === paginationData?.totalPage ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`dark:hover:text-[#FFD117] hover:text-[#FFD117] text-black dark:text-white ${currentPage === paginationData?.totalPage ? 'opacity-50' : ''}`}
                 >
                     <Arrow_Right />
                 </button>

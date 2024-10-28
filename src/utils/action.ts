@@ -55,58 +55,7 @@ export async function getUserReport(id:string, type:string) {
     console.log("error:", error);
   }
 }
- 
-export const getAllClients = async (page:number) => {
-  const token = await getCookie();
-  try {
-    const response = await fetch(
-      `${config.server}/api/users/all?page=${page}`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `userToken=${token}`,
-        },
-      }
-    );
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message);
-    }
-    const data = await response.json();
-    return { data };
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
 
-export const getMyClients = async (page:number) => {
-  const token = await getCookie();
-  try {
-    const response = await fetch(
-      `${config.server}/api/users/subordinates?page=${page}`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `userToken=${token}`,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error?.message);
-    }
-    const data = await response.json();
-    return { data };
-  } catch (error) {
-    throw error;
-  }
-};
 
 export const addClient = async (user:any) => {
   const token = await getCookie();
@@ -281,33 +230,6 @@ export const getActivePlayers = async (page:number) => {
     return data;
   } catch (error) {
     console.log(error);
-    throw error;
-  }
-};
-
-export const getTransactions = async (page:number,type:string) => {
-  const token = await getCookie();
-  const Type = `/${type}`
-  try {
-    const response = await fetch(
-      `${config.server}/api/transactions${Type}?page=${page}&limit=11`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `userToken=${token}`,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message);
-    }
-    const data = await response.json();
-    return { data };
-  } catch (error) {
     throw error;
   }
 };
@@ -574,7 +496,7 @@ export const getSubordinateTransactions = async (id:number, page:string) => {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Cookie: `userToken=${token}`,
+          Cookie: `userToken=${token}`, 
         },
         next: { tags: ["client"] },
       }
@@ -697,162 +619,132 @@ export const UpdateMaintenance = async (availableAt:string) => {
 };
 
 
-// export async function getPlatform() {
-//   const token = await getCookie();
+export const GetAllClients = async (search:string,page:number,query?:any) => {
+  const token = await getCookie();
+  try {
+    let filterQuery = "{}";
+    if (query) {
+      filterQuery = JSON.stringify(query);
+    }
+    
+    const response = await fetch(
+      `${config.server}/api/users/all?filter=${search}&page=${page}&search=${filterQuery}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `userToken=${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const error = await response.json();
+      return { error: error.message };
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
 
-//   try {
-//     const response = await fetch(`${config.server}/api/games/platforms`, {
-//       method: "GET",
-//       credentials: "include",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Cookie: `userToken=${token}`,
-//       },
-//     });
-//     if (!response.ok) {
-//       const error = await response.json();
-//       return { error: error.message };
-//     }
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.log("error", error);
-//   }
-// }
+export const GetMyClients = async (search:string,page:number,query?:any) => {
+  const token = await getCookie();
+  try {
+    let filterQuery = "{}";
+    if (query) {
+      filterQuery = JSON.stringify(query);
+    }
+    
+    const response = await fetch(
+      `${config.server}/api/users/subordinates?filter=${search}&page=${page}&search=${filterQuery}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `userToken=${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const error = await response.json();
+      return { error: error.message };
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
 
+export const GetMyTransactions = async (search:string,page:number, query?:any) => {
+  const token = await getCookie();
+  let filterQuery = "{}";
+  let username = "";
+  if (query) {
+    filterQuery = JSON.stringify(query);
+  }
+  if (search) {
+    username = search;
+  }
+  try {
+    const response = await fetch(
+      `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `userToken=${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const error = await response.json();
+      return { error: error.message };
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
 
+export const GetAllTransactions = async (search:string,page:number, query?:any) => {
+  const token = await getCookie();
+  let filterQuery = "{}";
+  let username = "";
+  if (query) {
+    filterQuery = JSON.stringify(query);
+  }
+  if (search) {
+    username = search;
+  }
+  try {
+    const response = await fetch(
+      `${config.server}/api/transactions/all?filter=${username}&page=${page}&search=${filterQuery}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `userToken=${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const error = await response.json();
+      return { error: error.message };
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
 
-// export const searchByUsername = async (search, page, query) => {
-//   const token = await getCookie();
-//   let filterQuery = "{}";
-//   let username = "";
-//   if (query) {
-//     filterQuery = JSON.stringify(query);
-//   }
-//   if (search) {
-//     username = search;
-//   }
-//   try {
-//     const response = await fetch(
-//       `${config.server}/api/users/subordinates?filter=${username}&page=${page}&search=${filterQuery}`,
-//       {
-//         method: "GET",
-//         credentials: "include",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Cookie: `userToken=${token}`,
-//         },
-//       }
-//     );
-//     if (!response.ok) {
-//       const error = await response.json();
-//       return { error: error.message };
-//     }
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.log("error", error);
-//   }
-// };
-
-// export const searchAllByUsername = async (search, page, query) => {
-//   const token = await getCookie();
-//   try {
-//     let username = "";
-//     let filterQuery = "{}";
-//     if (query) {
-//       filterQuery = JSON.stringify(query);
-//     }
-//     if (search) {
-//       username = search;
-//     }
-//     const response = await fetch(
-//       `${config.server}/api/users/all?filter=${username}&page=${page}&search=${filterQuery}`,
-//       {
-//         method: "GET",
-//         credentials: "include",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Cookie: `userToken=${token}`,
-//         },
-//       }
-//     );
-//     if (!response.ok) {
-//       const error = await response.json();
-//       return { error: error.message };
-//     }
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.log("error", error);
-//   }
-// };
-
-// export const filterMyTransactions = async (search, page, query) => {
-//   const token = await getCookie();
-//   let filterQuery = "{}";
-//   let username = "";
-//   if (query) {
-//     filterQuery = JSON.stringify(query);
-//   }
-//   if (search) {
-//     username = search;
-//   }
-//   try {
-//     const response = await fetch(
-//       `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}&limit=11`,
-//       {
-//         method: "GET",
-//         credentials: "include",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Cookie: `userToken=${token}`,
-//         },
-//       }
-//     );
-//     if (!response.ok) {
-//       const error = await response.json();
-//       return { error: error.message };
-//     }
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.log("error", error);
-//   }
-// };
-
-// export const filterAllTransactions = async (search, page, query) => {
-//   const token = await getCookie();
-//   let filterQuery = "{}";
-//   let username = "";
-//   if (query) {
-//     filterQuery = JSON.stringify(query);
-//   }
-//   if (search) {
-//     username = search;
-//   }
-//   try {
-//     const response = await fetch(
-//       `${config.server}/api/transactions/all?filter=${username}&page=${page}&search=${filterQuery}&limit=11`,
-//       {
-//         method: "GET",
-//         credentials: "include",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Cookie: `userToken=${token}`,
-//         },
-//       }
-//     );
-//     if (!response.ok) {
-//       const error = await response.json();
-//       return { error: error.message };
-//     }
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.log("error", error);
-//   }
-// };
 
 
 

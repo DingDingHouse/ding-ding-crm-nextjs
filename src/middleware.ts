@@ -12,7 +12,7 @@ export default function middleware(req: NextRequest) {
   }
 
   if (loggedin) {
-    const decodedToken: any = jwt.decode(loggedin.value) as { exp?: number, role?: string };
+    const decodedToken = jwt.decode(loggedin.value) as { exp?: number, role?: string };
 
     if (decodedToken?.exp && Date.now() >= decodedToken.exp * 1000) {
       const response = NextResponse.redirect(new URL("/login", req.url));
@@ -25,10 +25,11 @@ export default function middleware(req: NextRequest) {
 
     if (
       decodedToken?.role !== "company" &&
-      ["/game", "/transaction/all", "/clients/all", "/add-game"].includes(pathname)
-    ) {
+      (pathname.startsWith("/game/") ||
+      ["/game", "/transaction/all", "/clients/all", "/add-game"].includes(pathname))
+  ) {
       return NextResponse.redirect(new URL(`/`, req.url));
-    }
+  }
   }
 
   return NextResponse.next();

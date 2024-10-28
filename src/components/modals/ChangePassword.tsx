@@ -55,7 +55,7 @@ const Password = ({ id,closeModal}:any) => {
           />
           <button
             onClick={(e)=>handleGeneratePassword(e)}
-            className="px-2 py-1 !rounded-[5px] border-[1px] border-[#27a5ff] text-[#27a5ff] text-sm"
+            className="px-2 py-1 !rounded-[5px] border-[1px] border-[#FFD117] text-[#FFD117] text-sm"
           >
             Generate
           </button>
@@ -72,7 +72,7 @@ const Password = ({ id,closeModal}:any) => {
         <div className="col-span-2 flex justify-center mt-2">
           <button
             type="submit"
-            className="text-center flex justify-center px-8 hover:bg-opacity-60 items-center gap-2  mx-auto text-white text-xl rounded-md p-2 font-light bg-[#27a5ff] transition-all duration-200 ease-in-out"
+            className="text-center flex justify-center px-8 hover:bg-opacity-60 items-center gap-2  mx-auto text-white text-xl rounded-md p-2 font-light bg-[#F08D36] transition-all duration-200 ease-in-out"
           >
             Submit
           </button>

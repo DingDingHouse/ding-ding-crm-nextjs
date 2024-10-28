@@ -1,10 +1,10 @@
 import Search from '@/components/Search'
 import Table from '@/components/Table'
-import { getMyClients } from '@/utils/action'
+import { GetMyClients} from '@/utils/action'
 import React from 'react'
 
 const page = async ({ searchParams }: any) => {
-    const clients = await getMyClients(searchParams?.page)
+    const clients = await GetMyClients((searchParams?.search||''),(searchParams?.page||1))
     const tableData = {
         Thead: ['username', 'status', 'role', 'redeem', 'recharge', 'credits', 'action'],
         Tbody: ['username', 'status', 'role', 'totalRedeemed', 'totalRecharged', 'credits']
@@ -16,7 +16,7 @@ const page = async ({ searchParams }: any) => {
             <div className='pb-5'>
                 <Search />
             </div>
-            <Table paginationData={{currentPage:clients?.data?.currentPage,totalPage:clients?.data?.totalPages}} data={clients?.data?.subordinates} tableData={tableData} />
+            <Table paginationData={{currentPage:clients?.currentPage,totalPage:clients?.totalPages,search:searchParams?.search}} data={clients?.subordinates} tableData={tableData} />
         </div>
     )
 }

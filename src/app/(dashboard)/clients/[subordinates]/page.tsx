@@ -1,4 +1,3 @@
-import Dashboard from '@/components/Dashboard'
 import Subordinates from '@/components/Subordinates';
 import { getUserReport } from '@/utils/action'
 import React from 'react'

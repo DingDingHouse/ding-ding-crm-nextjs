@@ -162,7 +162,7 @@ const GamePayout = ({ tagname, platform, closeModal }: any) => {
                     ref={fileInputRef}
                 />
                 {payout && (
-                    <button className="px-6 py-2 bg-[#27a5ff] rounded-lg hover:opacity-60 text-white">
+                    <button className="px-6 py-2 bg-[#F08D36] rounded-lg hover:opacity-60 text-white">
                         Submit
                     </button>
                 )}
@@ -198,7 +198,7 @@ const GamePayout = ({ tagname, platform, closeModal }: any) => {
                                 {(
                                     <div className={`flex items-center ${item?.isActive&&'hidden'} justify-start pl-5 space-x-5`}>
                                         <div className='relative'>
-                                            <button onClick={() => handleOpen(index)} className=' hover:bg-gray-200 dark:hover:bg-black transition-all text-[#27a5ff] p-1 rounded-lg '>
+                                            <button onClick={() => handleOpen(index)} className=' hover:bg-gray-200 dark:hover:bg-black transition-all text-[#FFD117] p-1 rounded-lg '>
                                                 <Threedots />
                                             </button>
                                             <div className={` ${openIndex === index ? 'scale-100' : 'scale-0'} z-[51] transition-all absolute   ${indexs?.includes(index) ? 'top-[100%]' : 'bottom-0'} right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700`}>

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { loginUser } from "@/utils/action";
 import Loader from "@/utils/Load";
 import Image from "next/image";
+import Logo from "@/components/svg/Logo";
 
 const Login = () => {
     const [load, setLoad] = useState(false)
@@ -55,10 +56,10 @@ const Login = () => {
             <div
                 className="bg-[#1a1a1d] bg-cover w-full h-screen flex items-center justify-center relative"
             >
-                <div className="relative border-2 border-[#27a5ff] bg-[#27a5ff] pb-10 bg-clip-padding backdrop-filter backdrop-blur-[5px] bg-opacity-10   w-[90%] md:w-[55%] lg:w-[45%] xl:w-[35%] 2xl:w-[25%]  rounded-[1.8vw] p-2">
+                <div className="relative border-2 border-[#FFD117] bg-[#FFD117] pb-10 bg-clip-padding backdrop-filter backdrop-blur-[5px] bg-opacity-10   w-[90%] md:w-[55%] lg:w-[45%] xl:w-[35%] 2xl:w-[25%]  rounded-[1.8vw] p-2">
                     <div className="w-full h-full">
-                        <div>
-                            <Image src="/assets/images/logo.png" alt="logo" width={600} height={600} quality={100} className="w-[30%] mx-auto" />
+                        <div className="pt-5">
+                            <div className="mx-auto pb-3 flex justify-center"><Logo/></div>
                             <h1 className="text-center font-semibold leading-none text-3xl lg:text-4xl text-[#fff] drop-shadow-xl">
                                 Ding Ding CRM
                             </h1>
@@ -74,7 +75,7 @@ const Login = () => {
                                     <label htmlFor="username" className="text-xl font-extralight">
                                         Username
                                     </label>
-                                    <div className="flex items-center space-x-3 border-[1px] border-[#27a5ff] bg-[#dfdfdf37] rounded-md">
+                                    <div className="flex items-center space-x-3 border-[1px] border-[#FFD117] bg-[#dfdfdf37] rounded-md">
                                         <input
                                             type="text"
                                             name="username"
@@ -90,7 +91,7 @@ const Login = () => {
                                     <label htmlFor="password" className="text-xl font-extralight">
                                         Password
                                     </label>
-                                    <div className="flex items-center space-x-3 border-[1px] border-[#27a5ff] bg-[#dfdfdf37] rounded-md">
+                                    <div className="flex items-center space-x-3 border-[1px] border-[#FFD117] bg-[#dfdfdf37] rounded-md">
                                         <input
                                             type={hide ? "text" : "password"}
                                             name="password"
@@ -146,7 +147,7 @@ const Login = () => {
                                 <div className="flex justify-center">
                                     <button
                                         type="submit"
-                                        className="text-center bg-[#27a5ff]   mx-auto text-white font-semibold text-xl rounded-md py-2 hover:bg-opacity-50  transition-all duration-200 ease-in-out w-full"
+                                        className="text-center bg-[#F08D36]   mx-auto text-white font-semibold text-xl rounded-md py-2 hover:bg-opacity-50  transition-all duration-200 ease-in-out w-full"
                                     >
                                         LOGIN
                                     </button>

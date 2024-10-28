@@ -142,7 +142,7 @@ const EditGames = ({ id, closeModal, platform, prevData }: any) => {
                 <div className="col-span-2 flex justify-center mt-2">
                     <button
                         type="submit"
-                        className="text-center flex justify-center px-8 hover:bg-opacity-65 items-center gap-2 mx-auto text-white text-xl rounded-md p-2 font-light bg-[#27a5ff]  transition-all duration-200 ease-in-out"
+                        className="text-center flex justify-center px-8 hover:bg-opacity-65 items-center gap-2 mx-auto text-white text-xl rounded-md p-2 font-light bg-[#F08D36]  transition-all duration-200 ease-in-out"
                     >
                         Submit
                     </button>

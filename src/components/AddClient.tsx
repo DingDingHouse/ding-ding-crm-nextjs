@@ -124,7 +124,7 @@ const AddClient = () => {
             <div className="absolute top-[50%] left-[50%] w-[95%]  lg:w-[45%] xl:w-[40%] lg:left-[60%] translate-y-[-50%] translate-x-[-50%] ">
                 <form
                     onSubmit={(e) => handleSubmit(e)}
-                    className="grid grid-cols-2 lg:gap-4 gap-y-10 overflow-hidden w-[99%] md:w-[70%] lg:w-[100%] dark:bg-gray-700 bg-white shadow-xl  m-auto px-4 lg:px-16 py-8 lg:py-12 rounded-2xl text-black dark:text-white border-[#27a5ff] border-[3px]"
+                    className="grid grid-cols-2 lg:gap-4 gap-y-10 overflow-hidden w-[99%] md:w-[70%] lg:w-[100%] dark:bg-gray-700 bg-white shadow-xl  m-auto px-4 lg:px-16 py-8 lg:py-12 rounded-2xl text-black dark:text-white border-[#FFD117] border-[3px]"
                 >
                     <p className="text-left font-light">Username :</p>
                     <input
@@ -150,7 +150,7 @@ const AddClient = () => {
                         />
                         <button
                             onClick={(e) => handleGeneratePassword(e)}
-                            className="px-2 py-1 !rounded-[5px] border-[1px] border-[#27a5ff] text-[#27a5ff] text-sm"
+                            className="px-2 py-1 !rounded-[5px] border-[1px] border-[#FFD117] text-[#FFD117] text-sm"
                         >
                             Generate
                         </button>
@@ -182,7 +182,7 @@ const AddClient = () => {
                     <div className="col-span-2 flex justify-center mt-2">
                         <button
                             type="submit"
-                            className="text-center flex justify-center items-center gap-2 bg-[#27a5ff] mx-auto text-white text-xl rounded-md hover:bg-opacity-60 py-2 px-10 font-light transition-all duration-200 ease-in-out"
+                            className="text-center flex justify-center items-center gap-2 bg-[#F08D36] mx-auto text-white text-xl rounded-md hover:bg-opacity-60 py-2 px-10 font-light transition-all duration-200 ease-in-out"
                         >
                             Submit
                         </button>

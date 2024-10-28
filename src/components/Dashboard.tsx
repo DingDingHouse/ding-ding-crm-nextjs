@@ -9,45 +9,53 @@ import { getUserReport } from '@/utils/action'
 import toast from 'react-hot-toast'
 import Cookies from 'js-cookie'
 import jwt from 'jsonwebtoken'
-import Loader from '@/utils/Load'
+import TodayDate from './svg/Date'
+import { formatAmount } from '@/utils/common'
 
 const Dashboard = ({ subordinates_id }: any) => {
     const [reporttype, setReportType] = useState('daily')
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState<any>({});
+    const date = new Date()?.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'})
     const card = data?.role === 'player' ? [
         {
             title: 'Recharge',
-            amount: data?.recharge || 0,
+            amount: formatAmount(data?.recharge || 0),
             icon: <Recharge />
         },
         {
             title: 'Redeem',
-            amount: data?.redeem || 0,
+            amount: formatAmount(data?.redeem || 0),
             icon: <Redeem />
         },
     ] : subordinates_id && data?.role !== 'player' ? [{
         title: 'Recharge',
-        amount: data?.recharge || 0,
+        amount: formatAmount(data?.recharge || 0),
         icon: <Recharge />
     },
     {
         title: 'Redeem',
-        amount: data?.redeem || 0,
+        amount: formatAmount(data?.redeem || 0),
         icon: <Redeem />
     }, {
         title: 'Clients',
         amount: data?.users ? Object?.values(data?.users)?.reduce((acc: any, value: any) => acc + value, 0) : 0,
         icon: <Clients />
-    }] : [
+    },
+    {
+        title: 'Date',
+        amount: data?.users ?date: 0,
+        icon: <TodayDate />
+    }
+    ] : [
         {
             title: 'Recharge',
-            amount: data?.recharge || 0,
+            amount: formatAmount(data?.recharge || 0),
             icon: <Recharge />
         },
         {
             title: 'Redeem',
-            amount: data?.redeem || 0,
+            amount: formatAmount(data?.redeem || 0),
             icon: <Redeem />
         },
         {
@@ -80,10 +88,10 @@ const Dashboard = ({ subordinates_id }: any) => {
 
     return (
         <div className='py-2'>
-            <div className='p-2  h-full bg-gray-100  dark:bg-gray-800'>
+            <div className='px-2 h-full bg-gray-100 rounded dark:bg-gray-800'>
                 <div className='flex items-center justify-between'>
                     <div className=' dark:text-white text-[1.2rem] capitalize'>{reporttype} Report</div>
-                    <div>
+                    <div className='pt-2'>
                         <select onChange={(e) => setReportType(e.target.value)} className='px-8 bg-gray-300 rounded-md dark:bg-gray-700 outline-none dark:text-white text-black py-1.5'>
                             <option value="daily">Daily</option>
                             <option value="weakly">Weakly</option>
@@ -105,20 +113,20 @@ const Dashboard = ({ subordinates_id }: any) => {
                                         {item?.icon}
                                         <div className='dark:text-white text-xl text-black'>{item?.title}</div>
                                     </div>
-                                    <div className='text-5xl text-[#27a5ff] pt-4'>{item?.amount}</div>
+                                    <div className={`text-5xl text-transparent bg-clip-text bg-gradient-to-tr from-[#F08D36] to-[#FFD117] pt-4 ${item?.title==='Date'&&'text-[1.4rem] lg:text-[2rem]'}`}>{item?.amount}</div>
                                 </div>
                             ))
                     }
                 </div>
 
-              
-                        <div className='pt-5 pb-3 grid grid-cols-12 gap-4 h-full'>
-                            <RecentTransaction recentTransactions={data?.transactions} />
-                            <div className='col-span-12 lg:col-span-5 p-3 rounded-lg  bg-white dark:bg-gray-700 '>
-                                <div className='text-xl dark:text-white'>Most Played Games</div>
 
-                            </div>
-                        </div>
+                <div className='pt-5 pb-3 grid grid-cols-12 gap-4 h-full'>
+                    <RecentTransaction recentTransactions={data?.transactions} />
+                    <div className='col-span-12 lg:col-span-5 p-3 rounded-lg  bg-white dark:bg-gray-700 '>
+                        <div className='text-xl dark:text-white'>Most Played Games</div>
+
+                    </div>
+                </div>
 
             </div>
         </div>

@@ -45,7 +45,7 @@ const Recharge = ({ id, closeModal,modalType }: any) => {
                 <div className="col-span-2 flex justify-center mt-2">
                     <button
                         type="submit"
-                        className="text-center flex justify-center px-8 hover:bg-opacity-45 items-center gap-2 bg-[#27a5ff]   mx-auto text-white text-xl rounded-md p-2 font-light  transition-all duration-200 ease-in-out"
+                        className="text-center flex justify-center px-8 hover:bg-opacity-45 items-center gap-2 bg-[#F08D36]   mx-auto text-white text-xl rounded-md p-2 font-light  transition-all duration-200 ease-in-out"
                     >
                         Submit
                     </button>

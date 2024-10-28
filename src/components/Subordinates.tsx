@@ -6,7 +6,7 @@ import Dashboard from './Dashboard';
 import Subclient from './Subclient';
 import SubclientTransaction from './SubclientTransaction';
 
-const Subordinates = ({ subordinateData, id ,page}: any) => {
+const Subordinates = ({ subordinateData, id, page }: any) => {
     const [option, setOption] = React.useState("report");
     const router = useRouter()
     const pathname = usePathname()
@@ -20,7 +20,7 @@ const Subordinates = ({ subordinateData, id ,page}: any) => {
             ModalContent = <Subclient subordinates_id={id} page={page} />;
             break;
         case "transactions":
-            ModalContent = <SubclientTransaction subordinates_id={id} page={page}/>;
+            ModalContent = <SubclientTransaction subordinates_id={id} page={page} />;
             break;
         default:
             ModalContent = null;
@@ -53,7 +53,7 @@ const Subordinates = ({ subordinateData, id ,page}: any) => {
                                 setOption("report");
                             }}
                             className={`px-4  rounded-full ${option === "report"
-                                ? "text-white bg-opacity-80 border-[#27a5ff] bg-[#27a5ff]"
+                                ? "text-white bg-opacity-80 border-[#F08D36] bg-[#FFD117]"
                                 : "dark:text-[#f4f2f2ac] border-gray-700"
                                 } border-[3px] `}
                         >
@@ -66,7 +66,7 @@ const Subordinates = ({ subordinateData, id ,page}: any) => {
                                     router.push(`${pathname}?page=1`);
                                 }}
                                 className={`px-4  rounded-full ${option === "subordinates"
-                                    ? "text-white bg-opacity-80 border-[3px] border-[#27a5ff] bg-[#27a5ff]"
+                                    ? "text-white bg-opacity-80 border-[3px] border-[#F08D36] bg-[#FFD117]"
                                     : "dark:text-[#f4f2f2ac] border-gray-700"
                                     } border-[3px]  transition-all`}
                             >
@@ -79,7 +79,7 @@ const Subordinates = ({ subordinateData, id ,page}: any) => {
                                 router.push(`${pathname}?page=1`);
                             }}
                             className={`px-4  rounded-full ${option === "transactions"
-                                ? "text-white bg-opacity-80 border-[3px] border-[#27a5ff] bg-[#27a5ff]"
+                                ? "text-white bg-opacity-80 border-[3px] border-[#F08D36] bg-[#FFD117]"
                                 : "dark:text-[#f4f2f2ac] border-gray-700"
                                 } border-[3px] transition-all`}
                         >
