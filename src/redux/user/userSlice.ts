@@ -1,10 +1,10 @@
-import { createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 
 
-const initialState:any = {
+const initialState: any = {
     users: {
-        userCredit:0
+        userCredit: 0
     }
 }
 
@@ -14,9 +14,9 @@ export const UsersSlice = createSlice({
     reducers: {
         setUsercredit: (state, action) => {
             state.userCredit = action.payload
-       }
+        }
     }
 });
 
-export const {setUsercredit} = UsersSlice.actions;
+export const { setUsercredit } = UsersSlice.actions;
 export default UsersSlice.reducer;

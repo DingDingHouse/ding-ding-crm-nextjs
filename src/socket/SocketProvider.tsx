@@ -7,6 +7,7 @@ import {
   removePlayer,
   updateSpin,
 } from "@/redux/features/activeUsersSlice";
+import { setUsercredit } from "@/redux/user/userSlice";
 import { CurrentGame, EventType } from "@/utils/Types";
 import { config } from "@/utils/config";
 import { useAppDispatch } from "@/utils/hooks";
@@ -69,6 +70,17 @@ export const SocketProvider: React.FC<{
         handlePlatformEvent(data);
       });
 
+      socketInstance.on("data", (data: any) => {
+        switch (data.type) {
+          case "CREDITS":
+            hadleCurrentUserCredits(data.payload);
+            break;
+
+          default:
+            console.warn(`Unhandled event type: ${data.type}`);
+        }
+      });
+
       socketInstance.on("error", (error) => {
         toast.remove();
         toast.error(`Error from server: ${error.message}`);
@@ -103,6 +115,16 @@ export const SocketProvider: React.FC<{
 
       default:
         console.warn(`Unhandled event type: ${data.type}`);
+    }
+  };
+  const hadleCurrentUserCredits = (payload: any) => {
+    const { credits, role } = payload;
+    console.log("CURREN USER CREDI : ", credits, role);
+
+    if (role === "company") {
+      dispatch(setUsercredit(999999));
+    } else {
+      dispatch(setUsercredit(credits));
     }
   };
 
