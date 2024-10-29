@@ -10,7 +10,7 @@ const page = async ({ params,searchParams }: any) => {
     Tbody: ['thumbnail', 'name', 'category', 'type', 'status', 'slug']
   }
 
-  const filteredGames = games.filter((game: any) =>
+  const filteredGames = games?.length>0&&games?.filter((game: any) =>
     game.name?.toLowerCase().includes(searchParams?.search?.toLowerCase())
   );
   
