@@ -12,16 +12,24 @@ import EditGames from './modals/EditGames'
 import GamePayout from './modals/GamePayout'
 import Link from 'next/link'
 import Pagination from './Pagination'
+import Arrow_Right from './svg/Arrow_Right'
+import { usePathname, useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
+import GetPlayerGameHistory from './modals/GetPlayerGameHistory'
 
 const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => {
     const [openIndex, setOpenIndex] = useState(null); // State to track which dropdown is open
     const [modalType, setModalType] = useState({ Type: "", id: '', prevStatus: '', Username: '', PrevGameData: null, TagName: '', platform: '', gameName: '' })
     const [openmodal, setOpenModal] = useState(false)
+    const [range, setRange] = useState({ From: '', To: '' });
+    const [openRange, setOpenRange] = useState(false)
+    const router = useRouter();
+    const pathname = usePathname()
     const handleOpen = (index: any) => {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle the dropdown for the clicked index
     };
 
-    const buttons = page === 'game' ? ['Edit Game', 'Manage Payout'] : ['Change  Password', 'Recharge', 'Redeem', 'Update Status']
+    const buttons = page === 'game' ? ['Edit Game', 'Manage Payout'] : ['Change  Password', 'Recharge', 'Redeem', 'Update Status', 'Game History']
 
     const handelOpenModal = (type: string, id: string, prevStatus: string, Username: string, prevGameData: any, TagName: string, Platform: string, gameName: string) => {
         setModalType({ Type: type, id: id, prevStatus: prevStatus, Username: Username, PrevGameData: prevGameData, TagName: TagName, platform: Platform, gameName: gameName });
@@ -56,11 +64,30 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
         case "Manage Payout":
             ModalContent = <GamePayout id={modalType?.id} closeModal={handelCloseModal} platform={gamePlatform} tagname={modalType?.TagName} />
             break;
+        case "Game History":
+            ModalContent = <GetPlayerGameHistory closeModal={handelCloseModal} username={modalType?.Username} />
+            break;
         default:
             ModalContent = null;
     }
 
     const popup = [0, 1]
+
+    const handelInputRange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setRange({ ...range, [e.target.name]: parseInt(e.target.value) })
+    }
+
+    const handelSearchByCreditRange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            if (!range?.From || !range?.To) {
+                toast.error('Enter valid number!')
+                router.replace(`${pathname}?page=1&search=`)
+            } else {
+                router.replace(`${pathname}?page=1&search=&From=${range.From}&To=${range.To}`)
+            }
+        }
+    }
+
 
     return (
         <>
@@ -70,8 +97,19 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                         <tr>
                             {
                                 tableData.Thead.map((th: any) => (
-                                    <th key={th} scope="col" className="px-6 py-3 text-left">
-                                        {th}
+                                    <th key={th} scope="col" className="px-6 py-3  text-left">
+                                        <div className='flex items-center'>
+                                            {th}
+                                            {th === 'credits'&& page!=='subordinates' && <div className='relative pt-1 inline-block'>
+                                                <button onClick={() => setOpenRange(true)} className='rotate-[90deg]'><Arrow_Right /></button>
+                                                <div className={`flex ${openRange ? 'scale-100' : 'scale-0'} z-[51] transition-all items-center p-1 rounded gap-x-2 absolute right-0 bg-gray-300 dark:bg-gray-500 top-[100%]`}>
+                                                    <input onKeyDown={(e) => handelSearchByCreditRange(e)} onChange={(e) => handelInputRange(e)} value={range?.From} name='From' type="number" className='p-2 rounded bg-gray-200 dark:bg-gray-400 outline-none dark:text-white placeholder:text-gray-500 ' placeholder='From...' />
+                                                    <input onKeyDown={(e) => handelSearchByCreditRange(e)} onChange={(e) => handelInputRange(e)} value={range?.To} name='To' type="number" className='p-2 rounded bg-gray-200 dark:bg-gray-400 outline-none dark:text-white placeholder:text-gray-500 ' placeholder='to...' />
+                                                </div>
+                                            </div>}
+                                        </div>
+
+
                                     </th>
                                 ))
                             }
@@ -125,7 +163,7 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                                                         <ul className="py-2 text-sm text-gray-700 px-2 dark:text-gray-200" aria-labelledby="dropdownDelayButton">
                                                             {buttons.map((button, index) => (
                                                                 <li key={index}>
-                                                                    <button onClick={() => handelOpenModal(button, item?._id, item?.status, '', item, item?.tagName, '', '')} className={`block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md text-start dark:hover:text-white ${button === 'Change Password' ? 'text-blue-600' : ''}`}>
+                                                                    <button onClick={() => handelOpenModal(button, item?._id, item?.status, item?.username, item, item?.tagName, '', '')} className={`block ${item?.role !== 'player' && button === 'Game History' ? 'hidden' : 'block'} w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md text-start dark:hover:text-white ${button === 'Change Password' ? 'text-blue-600' : ''}`}>
                                                                         {button}
                                                                     </button>
                                                                 </li>
@@ -156,6 +194,7 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
             {page !== 'game' && !popup?.includes(paginationData?.totalPage) && <Pagination paginationData={paginationData} />}
             {openIndex !== null && <div onClick={() => handleOpen(null)} className='bg-black fixed top-0 bg-opacity-35 left-0 w-full h-screen z-[50]'></div>}
             {openmodal && <Modal closeModal={handelCloseModal} modaltype={modalType} >{ModalContent}</Modal>}
+            {openRange && <div onClick={() => setOpenRange(false)} className='bg-black fixed top-0 bg-opacity-35 left-0 w-full h-screen z-[50]'></div>}
         </>
 
     )

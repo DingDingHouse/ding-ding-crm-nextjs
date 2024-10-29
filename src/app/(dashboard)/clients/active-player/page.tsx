@@ -6,6 +6,8 @@ import Modal from "@/components/Modal";
 import { useSocket } from "@/socket/SocketProvider";
 import History from "@/components/svg/History";
 import Delete from "@/components/svg/Delete";
+import Close from "@/components/svg/Close";
+import Filter from "@/components/svg/Filter";
 
 export default function ActiveUsers() {
   const activeUsers = useAppSelector((state) => state.activeUsers.users);
@@ -16,6 +18,8 @@ export default function ActiveUsers() {
   const { socket } = useSocket();
   const selectedUser = selectedUserId ? activeUsers[selectedUserId] : null;
   const [sessionData, setSessionData] = useState<any[]>([]);
+  const [entryDate, setEntryDate] = useState<string>("");
+    const [showFilter,setShowFilter]=useState(false)
   const filteredUsers = Object.entries(activeUsers).filter(([playerId]) =>
     playerId.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -112,7 +116,7 @@ export default function ActiveUsers() {
                       {playerId}
                     </span>
                     <div className="space-x-4 flex items-center">
-                      <button className="text-red-600 hover:scale-105 transition-all" onClick={() =>setShowModal(playerId)}><Delete /></button>
+                      <button className="text-red-600 hover:scale-105 transition-all" onClick={() => setShowModal(playerId)}><Delete /></button>
                       <button className="text-yellow-600 hover:scale-105 transition-all" onClick={() => getPlayerSession(playerId)}><History /></button>
                       <button onClick={() => setSelectedUserId(playerId)} className="bg-[#FFD117] px-4 py-1 text-sm hover:scale-105 transition-all rounded-full text-gray-700 font-semibold dark:text-white bg-opacity-35 border-[2px] border-[#F08D36]">View</button>
                       <span
@@ -208,6 +212,25 @@ export default function ActiveUsers() {
       {
         sessionData?.length > 0 &&
         <Modal closeModal={handelCloseSession}>
+          <div className='relative'>
+            <button onClick={() => setShowFilter(!showFilter)} className='dark:text-white text-gray-700'><Filter /></button>
+            <select onChange={(e) => setEntryDate(e?.target?.value)} className={`top-[100%] ${showFilter ? 'scale-100' : 'scale-0'} transition-all left-0 absolute p-2 rounded-md text-black overflow-y-auto dark:text-white bg-gray-200 dark:bg-gray-400 outline-none `}>
+              <option value={''}>Select Date</option>
+
+              {
+                sessionData?.map((item) => (
+                  item?.gameSessions?.map((subitem: any) => (
+                    <>
+                      <option value={subitem?.entryTime}>{new Date(subitem?.entryTime).toLocaleString()}</option>
+                    </>
+                  ))
+
+                ))
+              }
+            </select>
+          </div>
+          <button onClick={handelCloseSession} className='absolute top-2 right-2'><Close /></button>
+
           <h3 className="text-xl font-bold capitalize text-center text-gray-600 dark:text-white mb-4">
             Player Game History
           </h3>
@@ -215,8 +238,7 @@ export default function ActiveUsers() {
             {sessionData?.length > 0 ? sessionData?.map((item, ind) => (
               <div key={ind} className="space-y-5">
                 {
-                  item?.gameSessions?.map((subitem: any, index: number) => (
-
+                  item?.gameSessions?.filter((subitem: any) => entryDate ? subitem.entryTime === entryDate : true).map((subitem: any, index: number) => (
                     <div key={index} className="rounded space-y-5 bg-gray-100 dark:bg-gray-600 p-2">
                       <div className="flex items-center  flex-wrap gap-2">
                         <div className="bg-gray-200 dark:bg-gray-900 px-4 py-2 rounded-md">
@@ -289,11 +311,10 @@ export default function ActiveUsers() {
                 <p className="text-gray-400 text-center">No active game details available.</p>
               )}
           </div>
-
         </Modal>
       }
       {/* Exit User Modal */}
-      {showModal && <Modal closeModal={()=>setShowModal('')}>
+      {showModal && <Modal closeModal={() => setShowModal('')}>
         <div>
           <p className="text-center dark:text-white">
             <span>Are you sure you want to Exit This Player ?</span>

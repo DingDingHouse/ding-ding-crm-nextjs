@@ -49,7 +49,7 @@ export const SocketProvider: React.FC<{
       });
 
       socketInstance.on("activePlayers", (activePlayersData) => {
-        activePlayersData.forEach((player: any) => {
+        activePlayersData.forEach((player:any) => {
           dispatch(
             addPlayer({
               playerId: player.playerId,
@@ -73,7 +73,7 @@ export const SocketProvider: React.FC<{
       socketInstance.on("data", (data: any) => {
         switch (data.type) {
           case "CREDITS":
-            hadleCurrentUserCredits(data.payload);
+            hadleCurrentUserCredits(data?.payload);
             break;
 
           default:
@@ -115,16 +115,6 @@ export const SocketProvider: React.FC<{
 
       default:
         console.warn(`Unhandled event type: ${data.type}`);
-    }
-  };
-  const hadleCurrentUserCredits = (payload: any) => {
-    const { credits, role } = payload;
-    console.log("CURREN USER CREDI : ", credits, role);
-
-    if (role === "company") {
-      dispatch(setUsercredit(999999));
-    } else {
-      dispatch(setUsercredit(credits));
     }
   };
 
@@ -192,7 +182,10 @@ export const SocketProvider: React.FC<{
         sessionDuration,
       })
     );
+
   };
+
+  
 
   const handleExitedGame = (payload: any) => {
     const { playerId } = payload;
@@ -201,6 +194,16 @@ export const SocketProvider: React.FC<{
 
   const handleUpdatedSpin = (summary: CurrentGame) => {
     dispatch(updateSpin(summary)); // Use the full payload to ensure all fields are updated
+  };
+
+
+  const hadleCurrentUserCredits = (payload: any) => {
+    const { credits, role } = payload;
+    if (role === "company") {
+      dispatch(setUsercredit('Infinite'));
+    } else {
+      dispatch(setUsercredit(credits));
+    }
   };
 
   return (

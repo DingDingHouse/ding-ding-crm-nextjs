@@ -24,7 +24,7 @@ const Pagination = ({ paginationData }: any) => {
     };
 
     useEffect(() => {
-        router?.replace(`${pathname}?page=${currentPage || 1}&search=${paginationData?.search || ''}`)
+        router?.replace(`${pathname}?page=${currentPage || 1}&search=${paginationData?.search || ''}&From=${paginationData?.From}&To=${paginationData?.To}`)
     }, [currentPage])
 
     useEffect(() => {

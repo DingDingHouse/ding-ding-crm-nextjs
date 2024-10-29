@@ -11,12 +11,15 @@ import Cookies from 'js-cookie'
 import jwt from 'jsonwebtoken'
 import TodayDate from './svg/Date'
 import { formatAmount } from '@/utils/common'
+import { useAppSelector } from '@/utils/hooks'
+import Percentage from './svg/Percentage'
 
-const Dashboard = ({ subordinates_id }: any) => {
+const Dashboard = ({ subordinates_id, userDetail }: any) => {
     const [reporttype, setReportType] = useState('daily')
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState<any>({});
-    const date = new Date()?.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'})
+    const date = new Date()?.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+    const userCredit = useAppSelector((state) => state?.user?.userCredit)
     const card = data?.role === 'player' ? [
         {
             title: 'Recharge',
@@ -44,10 +47,10 @@ const Dashboard = ({ subordinates_id }: any) => {
     },
     {
         title: 'Date',
-        amount: data?.users ?date: 0,
+        amount: data?.users ? date : 0,
         icon: <TodayDate />
     }
-    ] : [
+    ] : data?.role === "company" ? [
         {
             title: 'Recharge',
             amount: formatAmount(data?.recharge || 0),
@@ -67,6 +70,27 @@ const Dashboard = ({ subordinates_id }: any) => {
             title: 'Players',
             amount: data?.users?.player,
             icon: <Player />
+        }
+    ] : [
+        {
+            title: 'Recharge',
+            amount: formatAmount(data?.recharge || 0),
+            icon: <Recharge />
+        },
+        {
+            title: 'Redeem',
+            amount: formatAmount(data?.redeem || 0),
+            icon: <Redeem />
+        },
+        {
+            title: 'Clients',
+            amount: data?.users ? Object?.values(data?.users)?.reduce((acc: any, value: any) => acc + value, 0) : 0,
+            icon: <Clients />
+        },
+        {
+            title: 'Holdings %',
+            amount: `${userCredit && data?.recharge > 0 ? (Math.round((userCredit / userDetail?.data?.totalRecharged) * 100)) : 0}%`,
+            icon: <Percentage />
         }
     ]
 
@@ -113,7 +137,7 @@ const Dashboard = ({ subordinates_id }: any) => {
                                         {item?.icon}
                                         <div className='dark:text-white text-xl text-black'>{item?.title}</div>
                                     </div>
-                                    <div className={`text-5xl text-transparent bg-clip-text bg-gradient-to-tr from-[#F08D36] to-[#FFD117] pt-4 ${item?.title==='Date'&&'text-[1.4rem] lg:text-[2rem]'}`}>{item?.amount}</div>
+                                    <div className={`text-5xl text-transparent bg-clip-text bg-gradient-to-tr from-[#F08D36] to-[#FFD117] pt-4 ${item?.title === 'Date' && 'text-[1.4rem] lg:text-[2rem]'}`}>{item?.amount}</div>
                                 </div>
                             ))
                     }

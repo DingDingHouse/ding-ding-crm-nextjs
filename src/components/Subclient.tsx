@@ -31,10 +31,7 @@ const Subclient = ({ subordinates_id, page }: any) => {
     }
     return (
         <div className='pt-5'>
-            <div className='pb-5'>
-                <Search />
-            </div>
-            {load?<Loader/>:<Table paginationData={{ currentPage: data?.currentPage, totalPage: data?.totalPages }} data={data?.subordinates} tableData={tableData} />}
+            {load ? <Loader /> : <Table page={'subordinates'} paginationData={{ currentPage: data?.currentPage, totalPage: data?.totalPages }} data={data?.subordinates} tableData={tableData} />}
         </div>
     )
 }
