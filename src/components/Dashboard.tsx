@@ -118,7 +118,7 @@ const Dashboard = ({ subordinates_id, userDetail }: any) => {
                     <div className='pt-2'>
                         <select onChange={(e) => setReportType(e.target.value)} className='px-8 bg-gray-300 rounded-md dark:bg-gray-700 outline-none dark:text-white text-black py-1.5'>
                             <option value="daily">Daily</option>
-                            <option value="weakly">Weakly</option>
+                            <option value="weekly">Weekly</option>
                             <option value="monthly">Monthly</option>
                         </select>
                     </div>
