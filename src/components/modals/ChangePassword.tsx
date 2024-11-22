@@ -15,6 +15,7 @@ const Password = ({ id, closeModal }: any) => {
       return toast.error("Both the passwords do not match");
     }
 
+
     setLoad(true);
     const response: any = await editPassword(password, id);
     setLoad(false);
