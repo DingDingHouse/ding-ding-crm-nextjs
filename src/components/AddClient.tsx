@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken"
 import Loader from "@/utils/Load";
-import { passwordRegex } from "@/utils/regex";
 
 const AddClient = () => {
     const [load, setLoad] = useState(false);
@@ -95,12 +94,7 @@ const AddClient = () => {
         if (user.credits < 0) {
             return toast.error("Credit can't be negative");
         }
-        if (!passwordRegex.test(user.password)) {
-            return toast.error(
-                "Password must have at least 8 characters including at least one uppercase letter, 2 digits, and 1 special character!"
-            );
-        }
-
+   
         setLoad(true);
         const response = await addClient(user);
         if (response?.error) {
