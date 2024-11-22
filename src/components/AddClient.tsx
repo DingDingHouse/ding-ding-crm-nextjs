@@ -88,37 +88,37 @@ const AddClient = () => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (
-      user.username === "" ||
-      user.name === "" ||
-      user.password === "" ||
-      user.role === ""
-    ) {
-      return toast.error("All fileds are required!");
-    }
-    if (user.credits < 0) {
-      return toast.error("Credit can't be negative");
-    }
-
-    setLoad(true);
-    const response = await addClient(user);
-    if (response?.error) {
-      toast.error(response.error);
-    } else {
-      console.log("here");
-      toast.success("Client Added Successfully!");
-    }
-    setUser({
-      username: "",
-      name: "",
-      password: "",
-      role: "",
-      credits: 0,
-    });
-    setLoad(false);
-  };
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (
+            user.username === "" ||
+            user.name === "" ||
+            user.password === "" ||
+            user.role === ""
+        ) {
+            return toast.error("All fileds are required!");
+        }
+        if (user.credits < 0) {
+            return toast.error("Credit can't be negative");
+        }
+   
+        setLoad(true);
+        const response = await addClient(user);
+        if (response?.error) {
+            toast.error(response.error);
+        } else {
+            console.log("here");
+            toast.success("Client Added Successfully!");
+        }
+        setUser({
+            username: "",
+            name: "",
+            password: "",
+            role: "",
+            credits: 0,
+        });
+        setLoad(false);
+    };
 
   return (
     <>
