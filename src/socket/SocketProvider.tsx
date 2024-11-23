@@ -45,7 +45,6 @@ export const SocketProvider: React.FC<{
       setSocket(socketInstance);
 
       socketInstance.on("connect", () => {
-        console.log("Connected with socket id:", socketInstance?.id);
       });
 
       socketInstance.on("activePlayers", (activePlayersData) => {
@@ -77,7 +76,6 @@ export const SocketProvider: React.FC<{
             break;
 
           default:
-            console.warn(`Unhandled event type: ${data.type}`);
         }
       });
 
@@ -114,7 +112,6 @@ export const SocketProvider: React.FC<{
         break;
 
       default:
-        console.warn(`Unhandled event type: ${data.type}`);
     }
   };
 

@@ -18,7 +18,6 @@ const Maintenance = ({ closeModal, fetchDate }: any) => {
         setLoad(true)
         const response = await getToggle();
         if (response) {
-            console.log(response, "asdfasd")
             const today = new Date();
             today?.setHours(0, 0, 0, 0);
 
