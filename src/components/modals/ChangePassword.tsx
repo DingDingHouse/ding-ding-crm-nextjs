@@ -4,29 +4,31 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import Loader from "@/utils/Load";
 
-const Password = ({ id,closeModal}:any) => {
+const Password = ({ id, closeModal }: any) => {
   const [password, setPassword] = useState("");
   const [reEnterPassword, setReEnterPassword] = useState("");
   const [load, setLoad] = useState(false);
 
-  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (password !== reEnterPassword) {
       return toast.error("Both the passwords do not match");
     }
 
 
     setLoad(true);
-    const response:any = await editPassword(password, id);
+    const response: any = await editPassword(password, id);
     setLoad(false);
     if (response?.error) {
       return toast.error(response.error);
     }
     toast.success(response?.responseData?.message);
-    closeModal()
+    closeModal();
   };
 
-  const handleGeneratePassword = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleGeneratePassword = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
     const generatedPassword = await generatePassword();
     setPassword(generatedPassword.password);
@@ -36,7 +38,7 @@ const Password = ({ id,closeModal}:any) => {
   return (
     <>
       <form
-        onSubmit={(e)=>handleSubmit(e)}
+        onSubmit={(e) => handleSubmit(e)}
         className="grid grid-cols-2 md:gap-4 overflow-hidden lg:px-5"
       >
         <p className="text-left font-light dark:text-white">New Password :</p>
@@ -48,13 +50,15 @@ const Password = ({ id,closeModal}:any) => {
             className="text-left font-extralight text-gray-400 focus:outline-none bg-transparent w-full border-b-[1px] border-gray-500 dark:border-[#dfdfdf2e]"
           />
           <button
-            onClick={(e)=>handleGeneratePassword(e)}
+            onClick={(e) => handleGeneratePassword(e)}
             className="px-2 py-1 !rounded-[5px] border-[1px] border-[#FFD117] text-[#FFD117] text-sm"
           >
             Generate
           </button>
         </div>
-        <p className="text-left font-light dark:text-white">Re-Enter Password :</p>
+        <p className="text-left font-light dark:text-white">
+          Re-Enter Password :
+        </p>
         <input
           name="reEnterPassword"
           onChange={(e) => {
@@ -72,7 +76,7 @@ const Password = ({ id,closeModal}:any) => {
           </button>
         </div>
       </form>
-    {load&&<Loader />}
+      {load && <Loader />}
     </>
   );
 };
