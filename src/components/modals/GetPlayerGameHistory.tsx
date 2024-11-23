@@ -23,7 +23,6 @@ const GetPlayerGameHistory = ({ username, closeModal }: any) => {
                 if (response.success && response.sessionData) {
                     setSessionData(response.sessionData);
                 } else {
-                    console.error("Failed to retrieve session data:", response.message);
                 }
             }
         );

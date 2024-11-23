@@ -107,7 +107,6 @@ const AddClient = () => {
         if (response?.error) {
             toast.error(response.error);
         } else {
-            console.log("here");
             toast.success("Client Added Successfully!");
         }
         setUser({
