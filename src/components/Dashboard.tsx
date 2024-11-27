@@ -112,9 +112,9 @@ const Dashboard = ({ subordinates_id, userDetail }: any) => {
 
     return (
         <div className='py-2'>
-            <div className='px-2 h-full bg-gray-100 rounded dark:bg-gray-800'>
+            <div className='px-2 h-full bg-gray-100 rounded-xl dark:bg-gray-800'>
                 <div className='flex items-center justify-between'>
-                    <div className=' dark:text-white text-[1.2rem] capitalize'>{reporttype} Report</div>
+                    <div className=' dark:text-white text-[1.2rem] font-semibold capitalize'>{reporttype} Report</div>
                     <div className='pt-2'>
                         <select onChange={(e) => setReportType(e.target.value)} className='px-8 bg-gray-300 rounded-md dark:bg-gray-700 outline-none dark:text-white text-black py-1.5'>
                             <option value="daily">Daily</option>
@@ -135,9 +135,9 @@ const Dashboard = ({ subordinates_id, userDetail }: any) => {
                                 <div key={ind} className='p-4 rounded-lg bg-white dark:bg-gray-700 col-span-6 lg:col-span-4 xl:col-span-3'>
                                     <div className='flex justify-start space-x-2 items-center'>
                                         {item?.icon}
-                                        <div className='dark:text-white text-xl text-black'>{item?.title}</div>
+                                        <div className='dark:text-white text-md lg:text-xl text-black'>{item?.title}</div>
                                     </div>
-                                    <div className={`text-5xl text-transparent bg-clip-text bg-gradient-to-tr from-[#F08D36] to-[#FFD117] pt-4 ${item?.title === 'Date' && 'text-[1.4rem] lg:text-[2rem]'}`}>{item?.amount}</div>
+                                    <div className={`text-3xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-tr from-[#F08D36] to-[#FFD117] pt-4 ${item?.title === 'Date' && 'text-[1.4rem] lg:text-[2rem]'}`}>{item?.amount}</div>
                                 </div>
                             ))
                     }
@@ -147,7 +147,7 @@ const Dashboard = ({ subordinates_id, userDetail }: any) => {
                 <div className='pt-5 pb-3 grid grid-cols-12 gap-4 h-full'>
                     <RecentTransaction recentTransactions={data?.transactions} />
                     <div className='col-span-12 lg:col-span-5 p-3 rounded-lg  bg-white dark:bg-gray-700 '>
-                        <div className='text-xl dark:text-white'>Most Played Games</div>
+                        <div className='text-[1.2rem]  dark:text-white'>Most Played Games</div>
 
                     </div>
                 </div>
