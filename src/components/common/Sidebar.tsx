@@ -10,8 +10,10 @@ import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { setSidebarshow } from "@/redux/ReduxSlice";
 import Profile from "../svg/Profile";
 import Logo from "../svg/Logo";
+import Arrow_Left from "../svg/Arrow_Left";
 
 const Sidebar = () => {
+  const [opensidebar, setOpenSidebar] = useState(false)
   const isSidebar = useAppSelector((state) => state.globlestate?.showSideBar)
   const dispatch = useAppDispatch()
   const pathname = usePathname();
@@ -236,111 +238,98 @@ const Sidebar = () => {
     }
   };
 
-  //Logout Dispatch
-  const handelLogout = () => {
-    router.push("/logout");
-    toast.success("Logout Successfully!");
-  };
+  const handelOpenSideBar = () => {
+    setOpenSidebar(!opensidebar)
+  }
+
 
   return (
     <>
-      <aside
-        className={`fixed lg:sticky top-0  ${isSidebar ? 'left-0' : 'left-[-100%]'} w-[60%] lg:w-full z-40 h-screen transition-all  sm:translate-x-0`}
-        aria-label="Sidebar"
-      >
-        <div className="h-full flex flex-col justify-between px-3  overflow-y-auto bg-gray-100 dark:bg-gray-800">
-          <div>
-            <div className="flex p-2 gap-x-2 items-center">
-              <div><Logo/></div>
-              <div className="font-semibold font-mono text-black   dark:text-white tracking-wide">Ding Ding</div>
+      <div className={`${opensidebar ? ' lg:flex-.2 lg:w-full' : 'lg:flex-[.01] lg:w-full'} transition-all`}>
+        <aside
+          className={`fixed lg:sticky top-0  ${isSidebar ? 'left-0' : 'left-[-100%]'} w-[60%] lg:w-full z-40 h-screen transition-all  sm:translate-x-0`}
+          aria-label="Sidebar"
+        >
+          <div className="h-full flex flex-col justify-between px-3  overflow-y-auto bg-gray-100 dark:bg-gray-800">
+            <div>
+              <div className={`${opensidebar ? 'block' : 'lg:hidden'} flex p-2 justify-between items-center`}>
+                <div className="flex items-center gap-x-2">
+                  <Logo />
+                  <div className="font-semibold font-mono text-black   dark:text-white tracking-wide">Ding Ding</div>
+                </div>
+                <div onClick={handelOpenSideBar} className={`pl-4 pt-2  ${!opensidebar ? 'hidden' : 'lg:flex justify-end hidden'} text-white  cursor-pointer`}>
+                  <Arrow_Left />
+                </div>
+              </div>
+              <div onClick={handelOpenSideBar} className={`pb-4 px-3 ${opensidebar ? 'hidden' : 'lg:block hidden'} text-white rotate-180 cursor-pointer items-center`}>
+                <Arrow_Left />
+              </div>
+              <ul className="space-y-2 pt-3 font-medium">
+                {SideBarLink?.map((item, ind) => (
+                  <li key={ind}>
+                    <Link href={item?.Link}>
+                      <button
+                        onClick={() => toggleDropdown(ind == 0 ? -1 : ind)}
+                        type="button"
+                        className={`flex items-center w-full p-2 text-base ${pathname === item?.Link && 'bg-gray-200 dark:bg-gray-700'} text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700`}
+                      >
+                        {item?.icon}
+                        <span className={`flex-1 ${pathname === item?.Link && 'text-[#FFD117]'} ${opensidebar ? 'inline-block' : 'lg:hidden'} ms-3 text-left group-hover:text-[#FFD117] rtl:text-right whitespace-nowrap`}>
+                          {item?.LinkName}
+                        </span>
+                        <svg
+                          className={`w-3 h-3 transition-all ${opensidebar ? 'block' : 'lg:hidden'} ${ind == 0 && "hidden"}`}
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 10 6"
+                        >
+                          <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="m1 1 4 4 4-4"
+                          />
+                        </svg>
+                      </button>
+                    </Link>
+                    <ul
+                      className={`py-2 space-y-2  transition-all ${opensidebar ? 'block' : 'lg:hidden'} ${ind == 0 ? "hidden" : "block"
+                        } ${!openDropdown?.includes(ind)
+                          ? "hidden h-0"
+                          : "min-h-[100px] opacity-100"
+                        }`}
+                    >
+                      {item?.nested?.map((subitem, subind) => (
+                        <li key={subind} onClick={() => dispatch(setSidebarshow(false))}>
+                          <Link
+                            href={subitem?.Link}
+                            className={`flex items-center w-full p-2  ${pathname === subitem?.Link ? 'text-[#FFD117] dark:bg-gray-700 bg-gray-200' : 'text-gray-600 dark:text-white'} dark:hover:text-[#FFD117] hover:text-[#FFD117] transition duration-75 rounded-lg pl-11  hover:bg-gray-200 dark:hover:bg-gray-700`}
+                          >
+                            {subitem?.LinkName}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <ul className="space-y-2 pt-3 font-medium">
-              {SideBarLink?.map((item, ind) => (
-                <li key={ind}>
-                  <Link href={item?.Link}>
-                    <button
-                      onClick={() => toggleDropdown(ind == 0 ? -1 : ind)}
-                      type="button"
-                      className={`flex items-center w-full p-2 text-base ${pathname===item?.Link&&'bg-gray-200 dark:bg-gray-700'} text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700`}
-                    >
-                      {item?.icon}
-                      <span className={`flex-1 ${pathname===item?.Link&&'text-[#FFD117]'} ms-3 text-left group-hover:text-[#FFD117] rtl:text-right whitespace-nowrap`}>
-                        {item?.LinkName}
-                      </span>
-                      <svg
-                        className={`w-3 h-3 ${ind == 0 && "hidden"}`}
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 10 6"
-                      >
-                        <path
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="m1 1 4 4 4-4"
-                        />
-                      </svg>
-                    </button>
-                  </Link>
-                  <ul
-                    className={`py-2 space-y-2  transition-all ${ind == 0 ? "hidden" : "block"
-                      } ${!openDropdown?.includes(ind)
-                        ? "hidden h-0"
-                        : "min-h-[100px] opacity-100"
-                      }`}
-                  >
-                    {item?.nested?.map((subitem, subind) => (
-                      <li key={subind} onClick={()=>dispatch(setSidebarshow(false))}>
-                        <Link
-                          href={subitem?.Link}
-                          className={`flex items-center w-full p-2  ${pathname===subitem?.Link?'text-[#FFD117] dark:bg-gray-700 bg-gray-200':'text-gray-600 dark:text-white'} dark:hover:text-[#FFD117] hover:text-[#FFD117] transition duration-75 rounded-lg pl-11  hover:bg-gray-200 dark:hover:bg-gray-700`}
-                        >
-                          {subitem?.LinkName}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className="w-full space-y-5 pb-2">
+              {user && <div className="flex justify-center lg:hidden items-center space-x-1.5">
+                <Profile />
+                <div>
+                  <span className="dark:text-white tracking-wide block">{user?.username}</span>
+                  <span className="text-sm dark:text-gray-300 font-normal">({user?.role})</span>
+                </div>
+              </div>}
+            </div>
 
-          <div className="w-full space-y-5 pb-2">
-            {user && <div className="flex justify-center lg:hidden items-center space-x-1.5">
-              <Profile />
-              <div>
-                <span className="dark:text-white tracking-wide block">{user?.username}</span>
-                <span className="text-sm dark:text-gray-300 font-normal">({user?.role})</span>
-              </div>
-            </div>}
-            <button
-              onClick={handelLogout}
-              className="flex mb-2 items-center w-full justify-center p-2  border-[#F08D36] border-[3px] hover:bg-opacity-45 transition-all  rounded-lg text-gray-800 dark:text-white bg-[#FFD117] bg-opacity-25 group"
-            >
-              <span className=" ms-3 pr-3 whitespace-nowrap">Logout</span>
-              <svg
-                className="flex-shrink-0 w-5 h-5 rotate-180  transition duration-75 text-gray-800 dark:text-white "
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 16"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
-                />
-              </svg>
-            </button>
           </div>
-
-        </div>
-      </aside>
+        </aside>
+      </div>
       {isSidebar && <div onClick={() => dispatch(setSidebarshow(false))} className="fixed top-0 lg:hidden transition-all left-0 h-screen w-full bg-black z-20 bg-opacity-50"></div>}
     </>
   );
