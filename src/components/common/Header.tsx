@@ -17,40 +17,27 @@ import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [user, setUser] = useState<{ username: string; role: string; credits: number; } | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [opensetting, setOpenSetting] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const dispatch = useAppDispatch()
   const [modaltype, setModalType] = useState('');
   const router=useRouter();
   const userCredit = useAppSelector((state) => state?.user?.userCredit)
 
-
   useEffect(() => {
-    setMounted(true);
+    document.body.classList.add("dark");
   }, []);
 
-  useEffect(() => {
-    const savedMode = localStorage.getItem("dark-mode");
-    if (savedMode) {
-      setIsDarkMode(savedMode === "true");
-      if (savedMode === "true") {
-        document.body.classList.add("dark");
-      }
-    }
-  }, []);
-
-  const handleToggle = () => {
-    setIsDarkMode(!isDarkMode);
-    if (!isDarkMode) {
-      document.body.classList.add("dark");
-      localStorage.setItem("dark-mode", "true");
-    } else {
-      document.body.classList.remove("dark");
-      localStorage.setItem("dark-mode", "false");
-    }
-  };
+  // const handleToggle = () => {
+  //   setIsDarkMode(!isDarkMode);
+  //   if (!isDarkMode) {
+  //     document.body.classList.add("dark");
+  //     localStorage.setItem("dark-mode", "true");
+  //   } else {
+  //     document.body.classList.remove("dark");
+  //     localStorage.setItem("dark-mode", "false");
+  //   }
+  // };
 
   const handelGetUser = async () => {
     try {
@@ -92,6 +79,7 @@ const Header = () => {
     //Logout Dispatch
     const handelLogout = () => {
       router.push("/logout");
+      localStorage.clear();
       toast.success("Logout Successfully!");
     };
 

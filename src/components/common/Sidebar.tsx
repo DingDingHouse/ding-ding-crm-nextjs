@@ -13,7 +13,7 @@ import Logo from "../svg/Logo";
 import Arrow_Left from "../svg/Arrow_Left";
 
 const Sidebar = () => {
-  const [opensidebar, setOpenSidebar] = useState(false)
+  const [opensidebar, setOpenSidebar] = useState(true)
   const isSidebar = useAppSelector((state) => state.globlestate?.showSideBar)
   const dispatch = useAppDispatch()
   const pathname = usePathname();
