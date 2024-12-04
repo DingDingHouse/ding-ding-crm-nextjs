@@ -197,7 +197,7 @@ export const SocketProvider: React.FC<{
   const hadleCurrentUserCredits = (payload: any) => {
     const { credits, role } = payload;
     if (role === "company") {
-      dispatch(setUsercredit('Infinite'));
+      dispatch(setUsercredit('∞'));
     } else {
       dispatch(setUsercredit(credits));
     }

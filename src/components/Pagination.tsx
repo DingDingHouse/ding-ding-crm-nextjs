@@ -7,26 +7,37 @@ import { useRouter } from 'next/navigation';
 const Pagination = ({ paginationData }: any) => {
     const pathname = usePathname()
     const router = useRouter()
-    const [currentPage, setCurrentPage] = useState<number>(paginationData?.currentPage);
+    const [currentPage, setCurrentPage] = useState<any>(paginationData?.currentPage);
    
     // Function to handle previous page
     const handlePrev = () => {
         if (currentPage > 1) {
-            setCurrentPage((prevPage) => prevPage - 1);
+            setCurrentPage((prevPage:any) => prevPage - 1);
         }
     };
 
     // Function to handle next page
     const handleNext = () => {
         if (currentPage < paginationData?.totalPage) {
-            setCurrentPage((prevPage) => prevPage + 1);
+            setCurrentPage((prevPage:any) => prevPage + 1);
         }
     };
 
     useEffect(() => {
-        router?.replace(`${pathname}?page=${currentPage || 1}&search=${paginationData?.search || ''}&From=${paginationData?.From}&To=${paginationData?.To}`)
-    }, [currentPage])
-
+        const queryParams = new URLSearchParams();
+    
+        queryParams.set('page', currentPage || 1);
+    
+        if (paginationData?.search) queryParams.set('search', paginationData.search);
+        if (paginationData?.From) queryParams.set('From', paginationData.From);
+        if (paginationData?.To) queryParams.set('To', paginationData.To);
+        if (paginationData?.sort) queryParams.set('sort', paginationData.sort||'asc');
+    
+        const queryString = queryParams.toString();
+        const newUrl = `${pathname}?${queryString}`;
+    
+        router?.replace(newUrl);
+    }, [currentPage]);
     useEffect(() => {
         setCurrentPage(paginationData?.currentPage)
     },[paginationData?.currentPage])

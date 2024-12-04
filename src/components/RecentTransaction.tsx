@@ -5,9 +5,9 @@ import Up from './svg/Up'
 const RecentTransaction = ({ recentTransactions }: any) => {
     return (
         <div className='col-span-12 lg:col-span-7  rounded-lg  bg-white dark:bg-gray-700 '>
-            <div className="text-black px-6 tracking-wide text-[1.2rem]  py-2 m-3 dark:text-white dark:bg-onDark bg-light_black rounded-3xl inline-block">
+            <p className="text-black tracking-wide text-[1.2rem]  p-3 dark:text-white dark:bg-onDark bg-light_black rounded-3xl inline-block">
                 Recent Transactions
-            </div>
+            </p>
             {/* Transaction Table */}
             <div className='w-full'>
                 <div className="h-full relative  rounded-3xl">
