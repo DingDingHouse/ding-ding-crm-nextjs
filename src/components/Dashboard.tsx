@@ -10,7 +10,7 @@ import toast from 'react-hot-toast'
 import Cookies from 'js-cookie'
 import jwt from 'jsonwebtoken'
 import TodayDate from './svg/Date'
-import { formatAmount } from '@/utils/common'
+import { AllFeatures, formatAmount } from '@/utils/common'
 import { useAppSelector } from '@/utils/hooks'
 import Percentage from './svg/Percentage'
 
@@ -20,6 +20,7 @@ const Dashboard = ({ subordinates_id, userDetail }: any) => {
     const [data, setData] = useState<any>({});
     const date = new Date()?.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
     const userCredit = useAppSelector((state) => state?.user?.userCredit)
+    console.log(data,"data is here")
     const card = data?.role === 'player' ? [
         {
             title: 'Recharge',
@@ -50,7 +51,7 @@ const Dashboard = ({ subordinates_id, userDetail }: any) => {
         amount: data?.users ? date : 0,
         icon: <TodayDate />
     }
-    ] : data?.role === "company" ? [
+    ] : AllFeatures?.includes(data?.role)? [
         {
             title: 'Recharge',
             amount: formatAmount(data?.recharge || 0),

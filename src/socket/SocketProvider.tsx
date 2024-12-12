@@ -9,6 +9,7 @@ import {
 } from "@/redux/features/activeUsersSlice";
 import { setUsercredit } from "@/redux/user/userSlice";
 import { CurrentGame, EventType } from "@/utils/Types";
+import { AllFeatures } from "@/utils/common";
 import { config } from "@/utils/config";
 import { useAppDispatch } from "@/utils/hooks";
 import { useRouter } from "next/navigation";
@@ -196,7 +197,7 @@ export const SocketProvider: React.FC<{
 
   const hadleCurrentUserCredits = (payload: any) => {
     const { credits, role } = payload;
-    if (role === "company") {
+    if (role==="admin") {
       dispatch(setUsercredit('∞'));
     } else {
       dispatch(setUsercredit(credits));

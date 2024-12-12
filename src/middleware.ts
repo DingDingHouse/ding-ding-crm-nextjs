@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
+import { AllFeatures } from "./utils/common";
 
 export default function middleware(req: NextRequest) {
   const loggedin = req.cookies.get("userToken");
@@ -24,7 +25,7 @@ export default function middleware(req: NextRequest) {
     }
 
     if (
-      decodedToken?.role !== "company" &&
+      !AllFeatures?.includes(decodedToken?.role) &&
       (pathname.startsWith("/game/") ||
       ["/game", "/transaction/all", "/clients/all", "/add-game"].includes(pathname))
   ) {
