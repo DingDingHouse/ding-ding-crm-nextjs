@@ -20,7 +20,6 @@ const Dashboard = ({ subordinates_id, userDetail }: any) => {
     const [data, setData] = useState<any>({});
     const date = new Date()?.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
     const userCredit = useAppSelector((state) => state?.user?.userCredit)
-    console.log(data,"data is here")
     const card = data?.role === 'player' ? [
         {
             title: 'Recharge',
@@ -51,7 +50,7 @@ const Dashboard = ({ subordinates_id, userDetail }: any) => {
         amount: data?.users ? date : 0,
         icon: <TodayDate />
     }
-    ] : AllFeatures?.includes(data?.role)? [
+    ] : data?.role==='admin'? [
         {
             title: 'Recharge',
             amount: formatAmount(data?.recharge || 0),
