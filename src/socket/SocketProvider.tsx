@@ -9,10 +9,8 @@ import {
 } from "@/redux/features/activeUsersSlice";
 import { setUsercredit } from "@/redux/user/userSlice";
 import { CurrentGame, EventType } from "@/utils/Types";
-import { AllFeatures } from "@/utils/common";
 import { config } from "@/utils/config";
 import { useAppDispatch } from "@/utils/hooks";
-import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { io, Socket } from "socket.io-client";
@@ -36,7 +34,6 @@ export const SocketProvider: React.FC<{
 }> = ({ token, children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const dispatch = useAppDispatch();
-  const router = useRouter();
 
   useEffect(() => {
     if (token) {
