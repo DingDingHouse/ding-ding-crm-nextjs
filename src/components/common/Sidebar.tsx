@@ -279,6 +279,11 @@ const Sidebar = () => {
               icon: "",
             },
             {
+              LinkName: "Active Players",
+              Link: "/clients/active-player",
+              icon: "",
+            },
+            {
               LinkName: "Add Client",
               Link: "/clients/add",
               icon: "",
