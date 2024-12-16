@@ -2,6 +2,8 @@ import { useSocket } from '@/socket/SocketProvider';
 import React, { useEffect, useState } from 'react'
 import Close from '../svg/Close';
 import Filter from '../svg/Filter';
+import * as XLSX from "xlsx";
+import Image from 'next/image';
 
 const GetPlayerGameHistory = ({ username, closeModal }: any) => {
     const { socket } = useSocket();
@@ -32,10 +34,46 @@ const GetPlayerGameHistory = ({ username, closeModal }: any) => {
         getPlayerSession(username)
     }, [username])
 
+    //Download Data in Excel
+    const DownloadDatainExcel = (data: any) => {
+        const rows = data.flatMap((item: any) =>
+            item.gameSessions.map((session: any) => ({
+                "Player Name": item?.playerId,
+                "Manager Name": item?.managerName,
+                "Initial Credit": item?.initialCredits,
+                "Current Credit": item?.currentCredits,
+                "Entry Time": item?.entryTime,
+                "Exit Time": item?.exitTime,
+                "Game Session ID": session?.gameId,
+                "Game Duration": session?.sessionDuration,
+                "Total Spins": session?.totalSpins,
+                "Total Bet Amount": session?.totalBetAmount,
+                "Total Win Amount": session?.totalWinAmount,
+                "Credit At Entry": session?.creditsAtEntry,
+                "Credit At Exit": session?.creditsAtExit,
+            }))
+        );
+
+
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(rows);
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, "GamesHistory");
+
+        XLSX.utils.sheet_add_aoa(worksheet, [
+            ["Player Name", "Manager Name", "Initial Credit", "Current Credit", "Entry Time", "Exit Time", "Game Id", "Game Duration", "Total Spins", "Total Bet Amount", "Total Win Amount", "Credit At Entry", "Credit At Exit"],
+        ]);
+
+        XLSX.writeFile(workbook, `Report_of_${username}.xlsx`, { compression: true });
+    }
+
     return (
         <div className='relative'>
             <div className='relative'>
-                <button onClick={() => setShowFilter(!showFilter)} className='dark:text-white text-gray-700'><Filter /></button>
+                <div className='flex items-center gap-x-3'>
+                    <button onClick={() => setShowFilter(!showFilter)} className='dark:text-white text-gray-700'><Filter /></button>
+                    <button onClick={() => DownloadDatainExcel(sessionData)} className='dark:text-white text-gray-700'><Image src="/assets/images/Excel.png" alt="Excel" width={200} quality={100} height={200} className='w-[40px] hover:scale-105 transition-all h-[40px]' /></button>
+                </div>
                 <select onChange={(e) => setEntryDate(e?.target?.value)} className={`top-[100%] ${showFilter ? 'scale-100' : 'scale-0'} transition-all left-0 absolute p-2 rounded-md text-black overflow-y-auto dark:text-white bg-gray-200 dark:bg-gray-400 outline-none `}>
                     <option value={''}>Select Date</option>
 
