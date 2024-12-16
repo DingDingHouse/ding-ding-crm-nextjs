@@ -47,4 +47,4 @@ export const rolesHierarchy = (role: any) => {
   return hierarchy[role] || []; 
 };
 
-export const AllFeatures:any = ["admin"]
+export const AllFeatures:any = ["admin","company"]
