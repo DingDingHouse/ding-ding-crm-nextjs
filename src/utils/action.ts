@@ -659,7 +659,7 @@ export const GetMyClients = async (search:string,page:number,query?:any,sort?:st
   }
 };
 
-export const GetMyTransactions = async (search:string,page:number, query?:any,sort?:string) => {
+export const GetMyTransactions = async (search:string,page:number, query?:any,sort?:string,type?:string) => {
   const token = await getCookie();
   let filterQuery = "{}";
   let username = "";

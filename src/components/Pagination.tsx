@@ -27,6 +27,7 @@ const Pagination = ({ paginationData }: any) => {
         const queryParams = new URLSearchParams();
     
         queryParams.set('page', currentPage || 1);
+        queryParams.set('type', paginationData?.type);
     
         if (paginationData?.search) queryParams.set('search', paginationData.search);
         if (paginationData?.From) queryParams.set('From', paginationData.From);
