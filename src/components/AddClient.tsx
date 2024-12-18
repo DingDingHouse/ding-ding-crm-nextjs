@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
 import Loader from "@/utils/Load";
+import { rolesHierarchy } from "@/utils/common";
 
 const AddClient = () => {
   const [load, setLoad] = useState(false);
@@ -14,42 +15,23 @@ const AddClient = () => {
     role: string;
     credits: number;
   } | null>(null);
+
+  const roles = rolesHierarchy(userdata?.role);
   const handelGetUser = async () => {
     try {
       const user = await Cookies.get("userToken");
       if (user) {
         const decodedUser: any = jwt.decode(user);
         setUserData(decodedUser);
-        let initialRole = "";
-        switch (decodedUser?.role) {
-          case "company":
-            initialRole = "master";
-            break;
-          case "master":
-            initialRole = "distributor";
-            break;
-          case "distributor":
-            initialRole = "subdistributor";
-            break;
-          case "subdistributor":
-            initialRole = "store";
-            break;
-          case "store":
-            initialRole = "player";
-            break;
-          default:
-            initialRole = "";
-            break;
-        }
         setUser({
           username: "",
           name: "",
           password: "",
-          role: initialRole,
+          role: "",
           credits: 0,
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -62,7 +44,6 @@ const AddClient = () => {
     role: "",
     credits: 0,
   });
-  console.log(user, "userdata");
 
   const handleChange = (
     e:
@@ -88,36 +69,37 @@ const AddClient = () => {
     });
   };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (
-            user.username === "" ||
-            user.name === "" ||
-            user.password === "" ||
-            user.role === ""
-        ) {
-            return toast.error("All fileds are required!");
-        }
-        if (user.credits < 0) {
-            return toast.error("Credit can't be negative");
-        }
-   
-        setLoad(true);
-        const response = await addClient(user);
-        if (response?.error) {
-            toast.error(response.error);
-        } else {
-            toast.success("Client Added Successfully!");
-        }
-        setUser({
-            username: "",
-            name: "",
-            password: "",
-            role: "",
-            credits: 0,
-        });
-        setLoad(false);
-    };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (
+      user.username === "" ||
+      user.name === "" ||
+      user.password === "" ||
+      user.role === ""
+    ) {
+      return toast.error("All fileds are required!");
+    }
+    if (user.credits < 0) {
+      return toast.error("Credit can't be negative");
+    }
+
+    setLoad(true);
+    const response = await addClient(user);
+    if (response?.error) {
+      toast.error(response.error);
+    } else {
+      toast.success("Client Added Successfully!");
+    }
+    setUser({
+      username: "",
+      name: "",
+      password: "",
+      role: "",
+      credits: 0,
+    });
+    setLoad(false);
+  };
+
 
   return (
     <>
@@ -156,29 +138,21 @@ const AddClient = () => {
             </button>
           </div>
           <p className="text-left font-light">Role :</p>
-          {userdata?.role === "company" ? (
-            <select
-              name="role"
-              id="role"
-              value={user?.role}
-              onChange={(e) => handleChange(e)}
-              className="outline-none bg-transparent w-full text-left font-extralight text-gray-400 border-b-[1px] border-gray-300 dark:border-[#dfdfdf2e]"
-            >
-              <option value="master">master</option>
-              <option value="distributor">distributor</option>
-              <option value="subdistributor">sub-distributor</option>
-              <option value="store">store</option>
-              <option value="player">player</option>
-            </select>
-          ) : (
-            <input
-              name="role"
-              type="text"
-              value={user?.role}
-              disabled
-              className="text-left font-extralight text-gray-400 focus:outline-none bg-transparent w-full border-b-[1px] border-gray-300 dark:border-[#dfdfdf2e]"
-            />
-          )}
+          <select
+            name="role"
+            id="role"
+            value={user?.role}
+            onChange={(e) => handleChange(e)}
+            className="outline-none bg-transparent w-full text-left font-extralight text-gray-400 border-b-[1px] border-gray-300 dark:border-[#dfdfdf2e]"
+          >
+            <option value="">Select Role</option>
+            {
+              roles?.map((role, ind) => (
+                <option value={role} key={ind}>{role}</option>
+              ))
+            }
+          </select>
+
           <div className="col-span-2 flex justify-center mt-2">
             <button
               type="submit"

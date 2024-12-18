@@ -96,7 +96,7 @@ const Header = () => {
           <span className="dark:text-white text-black text-opacity-75 text-[.9rem] dark:text-opacity-60">Ding Ding CRM</span>
         </div>
         <div className="flex items-center space-x-4">
-          <div className="relative pt-2">
+          <div className={`${user?.role!=="admin"&&'hidden'} relative pt-2`}>
             <button onClick={() => setOpenSetting(!opensetting)} className="dark:text-white dark:hover:text-[#FFD117] hover:text-[#FFD117] text-gray-600 inline-block" ><Setting /></button>
             <div className={`${opensetting ? 'scale-100 ' : 'scale-0'} transition-all rounded-xl bg-gray-200  p-2 z-[52] text-base min-w-[200px]  md:right-0 space-y-2 absolute top-[100%] dark:bg-gray-600`}>
               <button onClick={() => handelOpenModal('Add_Platform')} className="w-full py-1.5 dark:hover:bg-gray-500 hover:bg-gray-300 rounded-md dark:text-white">Add Platform</button>

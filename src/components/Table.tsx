@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Threedots from './svg/Threedots'
 import Delete from './svg/Delete'
 import Modal from './Modal'
@@ -16,6 +16,11 @@ import Arrow_Right from './svg/Arrow_Right'
 import { usePathname, useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import GetPlayerGameHistory from './modals/GetPlayerGameHistory'
+import { rolesHierarchy } from '@/utils/common'
+import Cookies from "js-cookie";
+import jwt from "jsonwebtoken";
+
+
 
 const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => {
     const [openIndex, setOpenIndex] = useState(null); // State to track which dropdown is open
@@ -23,11 +28,24 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
     const [openmodal, setOpenModal] = useState(false)
     const [range, setRange] = useState({ From: '', To: '' });
     const [openRange, setOpenRange] = useState(false)
+    const [roles, setRoles] = useState<any>([])
     const router = useRouter();
     const pathname = usePathname()
     const handleOpen = (index: any) => {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle the dropdown for the clicked index
     };
+    
+
+
+    useEffect(() => {
+        const user= Cookies.get("userToken");
+        if (user) {
+            const decodedUser: any = jwt.decode(user);
+            const roles:any = rolesHierarchy(decodedUser.role)            
+            setRoles(roles)
+        }
+    }, [])
+    
 
     const buttons = page === 'game' ? ['Edit Game', 'Manage Payout'] : ['Change  Password', 'Recharge', 'Redeem', 'Update Status', 'Game History']
 
@@ -88,7 +106,6 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
         }
     }
 
-
     return (
         <>
             <div className="relative shadow-md  overflow-auto lg:overflow-visible rounded">
@@ -146,7 +163,7 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                                             <td key={td} className={tdClass}>
                                                 {td === "updatedAt" ? new Date(item[td]).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
                                                     : td === 'thumbnail' ? <Image src={item[td]} alt={item[td]} quality={100} width={400} height={400} className="w-[80px]" />
-                                                        : td === 'username' ? <Link href={`/clients/${item?._id}`} className="hover:text-[#FFD117] hover:scale-110 inline-block transition-all">{item[td]}</Link>
+                                                        : td === 'username' ? <Link href={roles?.includes(item?.role)?`/clients/${item?._id}`:'#'} className="hover:text-[#FFD117] hover:scale-110 inline-block transition-all">{item[td]}</Link>
                                                             : item[td]}
                                             </td>
                                         );
