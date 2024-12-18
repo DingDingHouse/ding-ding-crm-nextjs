@@ -42,8 +42,8 @@ const GetPlayerGameHistory = ({ username, closeModal }: any) => {
                 "Manager Name": item?.managerName,
                 "Initial Credit": item?.initialCredits,
                 "Current Credit": item?.currentCredits,
-                "Entry Time": item?.entryTime,
-                "Exit Time": item?.exitTime,
+                "Entry Time": new Date(session?.entryTime)?.toLocaleString(),
+                "Exit Time": new Date(session?.exitTime)?.toLocaleString(),
                 "Game Session ID": session?.gameId,
                 "Game Duration": session?.sessionDuration,
                 "Total Spins": session?.totalSpins,
@@ -61,7 +61,7 @@ const GetPlayerGameHistory = ({ username, closeModal }: any) => {
         XLSX.utils.book_append_sheet(workbook, worksheet, "GamesHistory");
 
         XLSX.utils.sheet_add_aoa(worksheet, [
-            ["Player Name", "Manager Name", "Initial Credit", "Current Credit", "Entry Time", "Exit Time", "Game Id", "Game Duration", "Total Spins", "Total Bet Amount", "Total Win Amount", "Credit At Entry", "Credit At Exit"],
+            ["Player Name", "Manager Name", "Initial Credit", "Current Credit", "Game Entry Time", "Game Exit Time", "Game Id", "Game Duration", "Total Spins", "Total Bet Amount", "Total Win Amount", "Credit At Entry", "Credit At Exit"],
         ]);
 
         XLSX.writeFile(workbook, `Report_of_${username}.xlsx`, { compression: true });
