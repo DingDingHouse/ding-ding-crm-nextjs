@@ -1,17 +1,18 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname} from "next/navigation";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { setSidebarshow } from "@/redux/ReduxSlice";
 import Profile from "../svg/Profile";
 import Logo from "../svg/Logo";
+import Arrow_Left from "../svg/Arrow_Left";
+import { AllFeatures } from "@/utils/common";
 
 const Sidebar = () => {
+  const [opensidebar, setOpenSidebar] = useState(true)
   const isSidebar = useAppSelector((state) => state.globlestate?.showSideBar)
   const dispatch = useAppDispatch()
   const pathname = usePathname();
@@ -20,6 +21,7 @@ const Sidebar = () => {
     role: string;
     credits: number;
   } | null>(null);
+
   const handelGetUser = async () => {
     try {
       const user = await Cookies.get("userToken");
@@ -34,9 +36,9 @@ const Sidebar = () => {
   }, []);
 
   const [openDropdown, setOpenDropdown] = useState<number[]>([1]);
-  const router = useRouter();
+  
   const SideBarLink =
-    user?.role === "company"
+    user?.role==="admin"
       ? [
         {
           LinkName: "Dashboard",
@@ -153,7 +155,92 @@ const Sidebar = () => {
           ],
         },
       ]
-      : [
+      :user?.role==="company"?[
+        {
+          LinkName: "Dashboard",
+          Link: "/",
+          icon: (
+            <svg
+              className="w-9  h-9  transition duration-75 text-[#FFD117] group-hover:text-[#FFD117] group-hover:bg-[#F08D36] rounded-2xl group-hover:bg-opacity-20 p-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 22 21"
+            >
+              <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
+              <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
+            </svg>
+          ),
+        },
+        {
+          LinkName: "Clients",
+          icon: (
+            <svg
+              className="w-9  h-9  transition duration-75 text-[#FFD117] group-hover:text-[#FFD117] group-hover:bg-[#F08D36] rounded-2xl group-hover:bg-opacity-20 p-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 18"
+            >
+              <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
+            </svg>
+          ),
+          Link: "",
+          showDropDown: true,
+          nested: [
+            {
+              LinkName: "My Clients",
+              Link: `/clients/my`,
+              icon: "",
+            },
+            {
+              LinkName: "All Clients",
+              Link: "/clients/all",
+              icon: "",
+            },
+            {
+              LinkName: "Active Players",
+              Link: "/clients/active-player",
+              icon: "",
+            },
+            {
+              LinkName: "Add Client",
+              Link: "/clients/add",
+              icon: "",
+            },
+
+          ],
+        },
+        {
+          LinkName: "Transaction",
+          Link: "",
+          icon: (
+            <svg
+              className="w-9  h-9  transition duration-75 text-[#FFD117] group-hover:text-[#FFD117] group-hover:bg-[#F08D36] rounded-2xl group-hover:bg-opacity-20 p-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.96 2.96 0 0 0 .13 5H5Z" />
+              <path d="M6.737 11.061a2.961 2.961 0 0 1 .81-1.515l6.117-6.116A4.839 4.839 0 0 1 16 2.141V2a1.97 1.97 0 0 0-1.933-2H7v5a2 2 0 0 1-2 2H0v11a1.969 1.969 0 0 0 1.933 2h12.134A1.97 1.97 0 0 0 16 18v-3.093l-1.546 1.546c-.413.413-.94.695-1.513.81l-3.4.679a2.947 2.947 0 0 1-1.85-.227 2.96 2.96 0 0 1-1.635-3.257l.681-3.397Z" />
+              <path d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z" />
+            </svg>
+          ),
+          showDropDown: true,
+          nested: [
+            {
+              LinkName: "My Transaction",
+              Link: "/transactions/my",
+              icon: "",
+            },
+            {
+              LinkName: "All Transaction",
+              Link: "/transactions/all",
+              icon: "",
+            },
+          ],
+        }]:[
         {
           LinkName: "Dashboard",
           Link: "/",
@@ -236,111 +323,98 @@ const Sidebar = () => {
     }
   };
 
-  //Logout Dispatch
-  const handelLogout = () => {
-    router.push("/logout");
-    toast.success("Logout Successfully!");
-  };
+  const handelOpenSideBar = () => {
+    setOpenSidebar(!opensidebar)
+  }
+
 
   return (
     <>
-      <aside
-        className={`fixed lg:sticky top-0  ${isSidebar ? 'left-0' : 'left-[-100%]'} w-[60%] lg:w-full z-40 h-screen transition-all  sm:translate-x-0`}
-        aria-label="Sidebar"
-      >
-        <div className="h-full flex flex-col justify-between px-3  overflow-y-auto bg-gray-100 dark:bg-gray-800">
-          <div>
-            <div className="flex p-2 gap-x-2 items-center">
-              <div><Logo/></div>
-              <div className="font-semibold font-mono text-black   dark:text-white tracking-wide">Ding Ding</div>
+      <div className={`${opensidebar ? ' lg:flex-.2 lg:w-full' : 'lg:flex-[.01] lg:w-full'} transition-all`}>
+        <aside
+          className={`fixed lg:sticky top-0  ${isSidebar ? 'left-0' : 'left-[-100%]'} w-[60%] lg:w-full z-40 h-screen transition-all  sm:translate-x-0`}
+          aria-label="Sidebar"
+        >
+          <div className="h-full flex flex-col justify-between px-3  overflow-y-auto bg-gray-100 dark:bg-gray-800">
+            <div>
+              <div className={`${opensidebar ? 'block' : 'lg:hidden'} flex p-2 justify-between items-center`}>
+                <div className="flex items-center gap-x-2">
+                  <Logo />
+                  <div className="font-semibold font-mono text-black   dark:text-white tracking-wide">Ding Ding</div>
+                </div>
+                <div onClick={handelOpenSideBar} className={`pl-4 pt-2  ${!opensidebar ? 'hidden' : 'lg:flex justify-end hidden'} text-white  cursor-pointer`}>
+                  <Arrow_Left />
+                </div>
+              </div>
+              <div onClick={handelOpenSideBar} className={`pb-4 px-3 ${opensidebar ? 'hidden' : 'lg:block hidden'} text-white rotate-180 cursor-pointer items-center`}>
+                <Arrow_Left />
+              </div>
+              <ul className="space-y-2 pt-3 font-medium">
+                {SideBarLink?.map((item, ind) => (
+                  <li key={ind}>
+                    <Link href={item?.Link}>
+                      <button
+                        onClick={() => toggleDropdown(ind == 0 ? -1 : ind)}
+                        type="button"
+                        className={`flex items-center w-full p-2 text-base ${pathname === item?.Link && 'bg-gray-200 dark:bg-gray-700'} text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700`}
+                      >
+                        {item?.icon}
+                        <span className={`flex-1 ${pathname === item?.Link && 'text-[#FFD117]'} ${opensidebar ? 'inline-block' : 'lg:hidden'} ms-3 text-left group-hover:text-[#FFD117] rtl:text-right whitespace-nowrap`}>
+                          {item?.LinkName}
+                        </span>
+                        <svg
+                          className={`w-3 h-3 transition-all ${opensidebar ? 'block' : 'lg:hidden'} ${ind == 0 && "hidden"}`}
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 10 6"
+                        >
+                          <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="m1 1 4 4 4-4"
+                          />
+                        </svg>
+                      </button>
+                    </Link>
+                    <ul
+                      className={`py-2 space-y-2  transition-all ${opensidebar ? 'block' : 'lg:hidden'} ${ind == 0 ? "hidden" : "block"
+                        } ${!openDropdown?.includes(ind)
+                          ? "hidden h-0"
+                          : "min-h-[100px] opacity-100"
+                        }`}
+                    >
+                      {item?.nested?.map((subitem, subind) => (
+                        <li key={subind} onClick={() => dispatch(setSidebarshow(false))}>
+                          <Link
+                            href={subitem?.Link}
+                            className={`flex items-center w-full p-2  ${pathname === subitem?.Link ? 'text-[#FFD117] dark:bg-gray-700 bg-gray-200' : 'text-gray-600 dark:text-white'} dark:hover:text-[#FFD117] hover:text-[#FFD117] transition duration-75 rounded-lg pl-11  hover:bg-gray-200 dark:hover:bg-gray-700`}
+                          >
+                            {subitem?.LinkName}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <ul className="space-y-2 pt-3 font-medium">
-              {SideBarLink?.map((item, ind) => (
-                <li key={ind}>
-                  <Link href={item?.Link}>
-                    <button
-                      onClick={() => toggleDropdown(ind == 0 ? -1 : ind)}
-                      type="button"
-                      className={`flex items-center w-full p-2 text-base ${pathname===item?.Link&&'bg-gray-200 dark:bg-gray-700'} text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700`}
-                    >
-                      {item?.icon}
-                      <span className={`flex-1 ${pathname===item?.Link&&'text-[#FFD117]'} ms-3 text-left group-hover:text-[#FFD117] rtl:text-right whitespace-nowrap`}>
-                        {item?.LinkName}
-                      </span>
-                      <svg
-                        className={`w-3 h-3 ${ind == 0 && "hidden"}`}
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 10 6"
-                      >
-                        <path
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="m1 1 4 4 4-4"
-                        />
-                      </svg>
-                    </button>
-                  </Link>
-                  <ul
-                    className={`py-2 space-y-2  transition-all ${ind == 0 ? "hidden" : "block"
-                      } ${!openDropdown?.includes(ind)
-                        ? "hidden h-0"
-                        : "min-h-[100px] opacity-100"
-                      }`}
-                  >
-                    {item?.nested?.map((subitem, subind) => (
-                      <li key={subind} onClick={()=>dispatch(setSidebarshow(false))}>
-                        <Link
-                          href={subitem?.Link}
-                          className={`flex items-center w-full p-2  ${pathname===subitem?.Link?'text-[#FFD117] dark:bg-gray-700 bg-gray-200':'text-gray-600 dark:text-white'} dark:hover:text-[#FFD117] hover:text-[#FFD117] transition duration-75 rounded-lg pl-11  hover:bg-gray-200 dark:hover:bg-gray-700`}
-                        >
-                          {subitem?.LinkName}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className="w-full space-y-5 pb-2">
+              {user && <div className="flex justify-center lg:hidden items-center space-x-1.5">
+                <Profile />
+                <div>
+                  <span className="dark:text-white tracking-wide block">{user?.username}</span>
+                  <span className="text-sm dark:text-gray-300 font-normal">({user?.role})</span>
+                </div>
+              </div>}
+            </div>
 
-          <div className="w-full space-y-5 pb-2">
-            {user && <div className="flex justify-center lg:hidden items-center space-x-1.5">
-              <Profile />
-              <div>
-                <span className="dark:text-white tracking-wide block">{user?.username}</span>
-                <span className="text-sm dark:text-gray-300 font-normal">({user?.role})</span>
-              </div>
-            </div>}
-            <button
-              onClick={handelLogout}
-              className="flex mb-2 items-center w-full justify-center p-2  border-[#F08D36] border-[3px] hover:bg-opacity-45 transition-all  rounded-lg text-gray-800 dark:text-white bg-[#FFD117] bg-opacity-25 group"
-            >
-              <span className=" ms-3 pr-3 whitespace-nowrap">Logout</span>
-              <svg
-                className="flex-shrink-0 w-5 h-5 rotate-180  transition duration-75 text-gray-800 dark:text-white "
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 16"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
-                />
-              </svg>
-            </button>
           </div>
-
-        </div>
-      </aside>
+        </aside>
+      </div>
       {isSidebar && <div onClick={() => dispatch(setSidebarshow(false))} className="fixed top-0 lg:hidden transition-all left-0 h-screen w-full bg-black z-20 bg-opacity-50"></div>}
     </>
   );

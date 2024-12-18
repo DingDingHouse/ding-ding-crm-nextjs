@@ -12,41 +12,32 @@ import Add_Platform from "../modals/Add_Platform";
 import Maintenance from "../modals/Maintenance";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks";
 import { setSidebarshow } from "@/redux/ReduxSlice";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [user, setUser] = useState<{ username: string; role: string; credits: number; } | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [opensetting, setOpenSetting] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const dispatch = useAppDispatch()
   const [modaltype, setModalType] = useState('');
+  const router=useRouter();
   const userCredit = useAppSelector((state) => state?.user?.userCredit)
-  
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
-    const savedMode = localStorage.getItem("dark-mode");
-    if (savedMode) {
-      setIsDarkMode(savedMode === "true");
-      if (savedMode === "true") {
-        document.body.classList.add("dark");
-      }
-    }
+    document.body.classList.add("dark");
   }, []);
 
-  const handleToggle = () => {
-    setIsDarkMode(!isDarkMode);
-    if (!isDarkMode) {
-      document.body.classList.add("dark");
-      localStorage.setItem("dark-mode", "true");
-    } else {
-      document.body.classList.remove("dark");
-      localStorage.setItem("dark-mode", "false");
-    }
-  };
+  // const handleToggle = () => {
+  //   setIsDarkMode(!isDarkMode);
+  //   if (!isDarkMode) {
+  //     document.body.classList.add("dark");
+  //     localStorage.setItem("dark-mode", "true");
+  //   } else {
+  //     document.body.classList.remove("dark");
+  //     localStorage.setItem("dark-mode", "false");
+  //   }
+  // };
 
   const handelGetUser = async () => {
     try {
@@ -85,6 +76,12 @@ const Header = () => {
       ModalContent = null;
   }
 
+    //Logout Dispatch
+    const handelLogout = () => {
+      router.push("/logout");
+      localStorage.clear();
+      toast.success("Logout Successfully!");
+    };
 
   return (
     <>
@@ -99,14 +96,14 @@ const Header = () => {
           <span className="dark:text-white text-black text-opacity-75 text-[.9rem] dark:text-opacity-60">Ding Ding CRM</span>
         </div>
         <div className="flex items-center space-x-4">
-          <div className="relative pt-2">
+          <div className={`${user?.role!=="admin"&&'hidden'} relative pt-2`}>
             <button onClick={() => setOpenSetting(!opensetting)} className="dark:text-white dark:hover:text-[#FFD117] hover:text-[#FFD117] text-gray-600 inline-block" ><Setting /></button>
             <div className={`${opensetting ? 'scale-100 ' : 'scale-0'} transition-all rounded-xl bg-gray-200  p-2 z-[52] text-base min-w-[200px]  md:right-0 space-y-2 absolute top-[100%] dark:bg-gray-600`}>
               <button onClick={() => handelOpenModal('Add_Platform')} className="w-full py-1.5 dark:hover:bg-gray-500 hover:bg-gray-300 rounded-md dark:text-white">Add Platform</button>
               <button onClick={() => handelOpenModal('Under_Maintenance')} className="w-full py-1.5  dark:hover:bg-gray-500 hover:bg-gray-300 rounded-md dark:text-white">Under Maintenance</button>
             </div>
           </div>
-          {mounted && <label
+          {/* {mounted && <label
             htmlFor="dark-mode-toggle"
             className="flex items-center cursor-pointer"
           >
@@ -130,7 +127,7 @@ const Header = () => {
                 )}
               </div>
             </div>
-          </label>}
+          </label>} */}
           <div className="dark:bg-[#dfdfdf24] py-1 px-4 rounded-md bg-gray-300 text-black text-opacity-60 dark:text-white  text-lg">
             {userCredit&&<p className="text-gray-900 dark:text-white">
               Credits :{" "}
@@ -144,6 +141,26 @@ const Header = () => {
             <span className="dark:text-white tracking-wide">{user?.username}</span>
             <span className="text-sm dark:text-gray-300 font-normal">({user?.role})</span>
           </div>}
+          <button
+              onClick={handelLogout}
+              className="px-3 py-2 hover:bg-opacity-45 transition-all  rounded-md text-gray-800 dark:text-white bg-[#FFD117] bg-opacity-25 group"
+            >
+              <svg
+                className="flex-shrink-0 w-5 h-5 rotate-180  transition duration-75 text-gray-800 dark:text-white "
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 18 16"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
+                />
+              </svg>
+            </button>
         </div>
       </div>
       {openModal && <Modal closeModal={handelCloseModal}>{ModalContent}</Modal>}

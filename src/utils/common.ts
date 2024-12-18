@@ -32,4 +32,19 @@ export function formatAmount(amount:number) {
     } else {
       return amount.toString(); // Less than 1000, no formatting
     }
-  }
+}
+  
+export const rolesHierarchy = (role: any) => {
+  const hierarchy: { [key: string]: string[] } = {
+    admin: ["company", "master", "distributor", "subdistributor", "store","player"],
+    company: ["master", "distributor", "subdistributor", "store","player"],
+    master: ["distributor"],
+    distributor: ["subdistributor"],
+    subdistributor: ["store"],
+    store: ["player"],
+  };
+
+  return hierarchy[role] || []; 
+};
+
+export const AllFeatures:any = ["admin","company"]
