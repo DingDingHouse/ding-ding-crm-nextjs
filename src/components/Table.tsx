@@ -36,7 +36,6 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
     };
     
 
-
     useEffect(() => {
         const user= Cookies.get("userToken");
         if (user) {

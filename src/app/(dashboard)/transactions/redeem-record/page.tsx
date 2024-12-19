@@ -1,10 +1,11 @@
 import Search from '@/components/Search'
 import Table from '@/components/Table'
-import {GetAllTransactions} from '@/utils/action'
+import {GetMyTransactions} from '@/utils/action'
 import React from 'react'
 
 const page = async ({ searchParams }:any) => {
-    const AllTransaction = await GetAllTransactions(searchParams?.search,searchParams?.page,'',searchParams?.sort)
+    const transactions = await GetMyTransactions(searchParams?.search,searchParams?.page,'',searchParams?.sort,'redeem')
+   
     const tableData = {
         Thead: ['status', 'Amount', 'Sender', 'Receiver', 'Transaction Date'],
         Tbody:['type', 'amount', 'debtor', 'creditor','updatedAt']
@@ -15,7 +16,7 @@ const page = async ({ searchParams }:any) => {
             <div className='pb-5'>
                 <Search/>
             </div>
-            <Table paginationData={{currentPage:AllTransaction?.currentPage,totalPage:AllTransaction?.totalPages,search:searchParams?.search,sort:searchParams?.sort}} data={AllTransaction?.transactions} tableData={tableData} />
+            <Table paginationData={{ currentPage: transactions?.currentPage, totalPage: transactions?.totalPages, search:searchParams?.search,sort:searchParams?.sort}} data={transactions?.transactions} tableData={tableData} />
         </div>
     )
 }
