@@ -36,8 +36,8 @@ export function formatAmount(amount:number) {
   
 export const rolesHierarchy = (role: any) => {
   const hierarchy: { [key: string]: string[] } = {
-    admin: ["company", "master", "distributor", "subdistributor", "store","player"],
-    company: ["master", "distributor", "subdistributor", "store","player"],
+    admin: ["supermaster", "master", "distributor", "subdistributor", "store","player"],
+    supermaster: ["master", "distributor", "subdistributor", "store","player"],
     master: ["distributor"],
     distributor: ["subdistributor"],
     subdistributor: ["store"],
@@ -47,4 +47,4 @@ export const rolesHierarchy = (role: any) => {
   return hierarchy[role] || []; 
 };
 
-export const AllFeatures:any = ["admin","company"]
+export const AllFeatures:any = ["admin","supermaster"]
