@@ -671,7 +671,7 @@ export const GetMyTransactions = async (search:string,page:number, query?:any,so
   }
   try {
     const response = await fetch(
-      `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort}`,
+      `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort}&type=${type}`,
       {
         method: "GET",
         credentials: "include",
