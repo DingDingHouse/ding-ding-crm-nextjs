@@ -659,7 +659,7 @@ export const GetMyClients = async (search:string,page:number,query?:any,sort?:st
   }
 };
 
-export const GetMyTransactions = async (search:string,page:number, query?:any,sort?:string) => {
+export const GetMyTransactions = async (search: string, page: number, query?: any, sort?: string, type?: string) => {
   const token = await getCookie();
   let filterQuery = "{}";
   let username = "";
@@ -671,7 +671,7 @@ export const GetMyTransactions = async (search:string,page:number, query?:any,so
   }
   try {
     const response = await fetch(
-      `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort}`,
+      `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort}&type=${type||''}`,
       {
         method: "GET",
         credentials: "include",

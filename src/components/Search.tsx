@@ -1,12 +1,15 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import SearchIcon from './svg/SearchIcon'
 import { usePathname, useRouter } from 'next/navigation'
 import Sort from './svg/Sort'
+import { useAppDispatch, useAppSelector } from '@/utils/hooks'
+import { setDatasorting } from '@/redux/ReduxSlice'
 
 const Search = () => {
     const [search, setSearch] = useState('')
-    const [sort, setSort] = useState(false)
+    const dispatch = useAppDispatch()
+    const sort=useAppSelector((state)=>state?.globlestate?.isDataSorting)
     const pathname = usePathname()
     const router = useRouter()
     const handelSearch = (e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLInputElement>) => {
@@ -19,14 +22,11 @@ const Search = () => {
         }
     }
 
-    const handelSort = (sort: string) => {
-        router.push(`${pathname}?page=1&sort=${sort}`)
+    const handelSort = () => {
+        dispatch(setDatasorting(!sort))
         setSearch('')
     }
 
-    useEffect(() => {
-        handelSort(sort ? 'desc' : 'asc')
-    }, [sort])
 
     return (
         <div className='flex items-center gap-x-5'>
@@ -51,7 +51,7 @@ const Search = () => {
                 </div>
             </div>
             <div className='text-white relative'>
-                <button onClick={() => setSort(!sort)} className='bg-white bg-opacity-15 px-3 py-1.5 rounded-md shadow-inner hover:scale-90 transition-all'><Sort /></button>
+                <button onClick={handelSort} className='bg-white bg-opacity-15 px-3 py-1.5 rounded-md shadow-inner hover:scale-90 transition-all'><Sort /></button>
             </div>
         </div>
     )

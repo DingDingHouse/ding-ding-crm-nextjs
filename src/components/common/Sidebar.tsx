@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname} from "next/navigation";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
@@ -9,7 +9,6 @@ import { setSidebarshow } from "@/redux/ReduxSlice";
 import Profile from "../svg/Profile";
 import Logo from "../svg/Logo";
 import Arrow_Left from "../svg/Arrow_Left";
-import { AllFeatures } from "@/utils/common";
 
 const Sidebar = () => {
   const [opensidebar, setOpenSidebar] = useState(true)
@@ -36,9 +35,10 @@ const Sidebar = () => {
   }, []);
 
   const [openDropdown, setOpenDropdown] = useState<number[]>([1]);
-  
+  const SingleTabs = ["Dashboard", "Recharge Record", "Redeem Record"]
+
   const SideBarLink =
-    user?.role==="admin"
+    user?.role === "admin"
       ? [
         {
           LinkName: "Dashboard",
@@ -154,8 +154,22 @@ const Sidebar = () => {
             },
           ],
         },
+        {
+          LinkName: "Recharge Record",
+          Link: "/transactions/recharge-record",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-9  h-9  transition duration-75 text-[#FFD117] group-hover:text-[#FFD117] group-hover:bg-[#F08D36] rounded-2xl group-hover:bg-opacity-20 p-2"><path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17" /><path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" /><path d="m2 16 6 6" /><circle cx="16" cy="9" r="2.9" /><circle cx="6" cy="5" r="3" /></svg>
+          ),
+        },
+        {
+          LinkName: "Redeem Record",
+          Link: "/transactions/redeem-record",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-9  h-9  transition duration-75 text-[#FFD117] group-hover:text-[#FFD117] group-hover:bg-[#F08D36] rounded-2xl group-hover:bg-opacity-20 p-2"><path d="M11 12h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 14" /><path d="m7 18 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" /><path d="m2 13 6 6" /></svg>
+          ),
+        }
       ]
-      :user?.role==="company"?[
+      : user?.role === "supermaster" ? [
         {
           LinkName: "Dashboard",
           Link: "/",
@@ -240,7 +254,22 @@ const Sidebar = () => {
               icon: "",
             },
           ],
-        }]:[
+        },
+        {
+          LinkName: "Recharge Record",
+          Link: "/transactions/recharge-record",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-9  h-9  transition duration-75 text-[#FFD117] group-hover:text-[#FFD117] group-hover:bg-[#F08D36] rounded-2xl group-hover:bg-opacity-20 p-2"><path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17" /><path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" /><path d="m2 16 6 6" /><circle cx="16" cy="9" r="2.9" /><circle cx="6" cy="5" r="3" /></svg>
+          ),
+        },
+        {
+          LinkName: "Redeem Record",
+          Link: "/transactions/redeem-record",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-9  h-9  transition duration-75 text-[#FFD117] group-hover:text-[#FFD117] group-hover:bg-[#F08D36] rounded-2xl group-hover:bg-opacity-20 p-2"><path d="M11 12h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 14" /><path d="m7 18 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" /><path d="m2 13 6 6" /></svg>
+          ),
+        }
+      ] : [
         {
           LinkName: "Dashboard",
           Link: "/",
@@ -310,6 +339,20 @@ const Sidebar = () => {
             },
           ],
         },
+        {
+          LinkName: "Recharge Record",
+          Link: "/transactions/recharge-record",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-9  h-9  transition duration-75 text-[#FFD117] group-hover:text-[#FFD117] group-hover:bg-[#F08D36] rounded-2xl group-hover:bg-opacity-20 p-2"><path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17" /><path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" /><path d="m2 16 6 6" /><circle cx="16" cy="9" r="2.9" /><circle cx="6" cy="5" r="3" /></svg>
+          ),
+        },
+        {
+          LinkName: "Redeem Record",
+          Link: "/transactions/redeem-record",
+          icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-9  h-9  transition duration-75 text-[#FFD117] group-hover:text-[#FFD117] group-hover:bg-[#F08D36] rounded-2xl group-hover:bg-opacity-20 p-2"><path d="M11 12h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 14" /><path d="m7 18 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9" /><path d="m2 13 6 6" /></svg>
+          ),
+        }
       ];
 
   const toggleDropdown = (index: number) => {
@@ -354,7 +397,7 @@ const Sidebar = () => {
                   <li key={ind}>
                     <Link href={item?.Link}>
                       <button
-                        onClick={() => toggleDropdown(ind == 0 ? -1 : ind)}
+                        onClick={() => toggleDropdown(SingleTabs?.includes(item?.LinkName) ? -1 : ind)}
                         type="button"
                         className={`flex items-center w-full p-2 text-base ${pathname === item?.Link && 'bg-gray-200 dark:bg-gray-700'} text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-200 dark:text-white dark:hover:bg-gray-700`}
                       >
@@ -363,7 +406,7 @@ const Sidebar = () => {
                           {item?.LinkName}
                         </span>
                         <svg
-                          className={`w-3 h-3 transition-all ${opensidebar ? 'block' : 'lg:hidden'} ${ind == 0 && "hidden"}`}
+                          className={`w-3 h-3 transition-all ${opensidebar ? 'block' : 'lg:hidden'} ${SingleTabs?.includes(item?.LinkName) && "hidden"}`}
                           aria-hidden="true"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
