@@ -744,5 +744,26 @@ export const getUserData = async () => {
   }
 };
 
+export const getGameHistory = async (startDate: string, endDate: string, playerId: string, page: number) => {
+  try {
+    const token = await getCookie();
+    const response = await fetch(`${config.server}/api/session/?startDate=${startDate}&endDate=${endDate}&playerId=${playerId}&page=${page}&limit=${5}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `userToken=${token}`,
+      },
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message);
+    }
+    const data = await response.json();
+    return { data };
+  } catch (error) {
+  }
+};
+
 
 

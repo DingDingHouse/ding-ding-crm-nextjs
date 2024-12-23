@@ -90,6 +90,7 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
 
     const popup = [0, 1]
 
+
     const handelInputRange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRange({ ...range, [e.target.name]: parseInt(e.target.value) })
     }
