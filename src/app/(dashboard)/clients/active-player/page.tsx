@@ -60,26 +60,7 @@ export default function ActiveUsers() {
     );
   };
 
-  // Fetch all player session data and display it in modal
-  const getPlayerSession = (username: string) => {
-    socket?.emit(
-      "data",
-      {
-        action: "PLAYER_SESSION",
-        payload: { playerId: username },
-      },
-      (response: {
-        success: boolean;
-        message: string;
-        sessionData?: any[];
-      }) => {
-        if (response.success && response.sessionData) {
-          setSessionData(response.sessionData);
-        } else {
-        }
-      }
-    );
-  };
+
 
   const handelCloseSession = () => {
     setSessionData([]);
@@ -115,7 +96,6 @@ export default function ActiveUsers() {
                     </span>
                     <div className="space-x-4 flex items-center">
                       <button className="text-red-600 hover:scale-105 transition-all" onClick={() => setShowModal(playerId)}><Delete /></button>
-                      <button className="text-yellow-600 hover:scale-105 transition-all" onClick={() => getPlayerSession(playerId)}><History /></button>
                       <button onClick={() => setSelectedUserId(playerId)} className="bg-[#FFD117] px-4 py-1 text-sm hover:scale-105 transition-all rounded-full text-gray-700 font-semibold dark:text-white bg-opacity-35 border-[2px] border-[#F08D36]">View</button>
                       <span
                         className={`px-4 py-1 rounded-full text-sm ${playerData.currentGame?.gameId
