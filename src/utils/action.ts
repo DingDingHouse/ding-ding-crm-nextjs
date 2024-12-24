@@ -4,7 +4,7 @@ import { config } from "./config";
 import { getCookie } from "./cookie";
 
 
-export const loginUser = async (data:any) => {
+export const loginUser = async (data: any) => {
   try {
     const response = await fetch(`${config.server}/api/users/login`, {
       method: "POST",
@@ -26,7 +26,7 @@ export const loginUser = async (data:any) => {
   }
 };
 
-export async function getUserReport(id:string, type:string) {
+export async function getUserReport(id: string, type: string) {
   const token = await getCookie();
   try {
     const response = await fetch(
@@ -55,7 +55,7 @@ export async function getUserReport(id:string, type:string) {
 }
 
 
-export const addClient = async (user:any) => {
+export const addClient = async (user: any) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/users`, {
@@ -103,12 +103,12 @@ export async function generatePassword() {
   }
 }
 
-export const editPassword = async (password:string, id:string) => {
+export const editPassword = async (password: string, id: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/users/${id}`, {
       method: "PUT",
-      body: JSON.stringify({ password}),
+      body: JSON.stringify({ password }),
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
@@ -127,7 +127,7 @@ export const editPassword = async (password:string, id:string) => {
   }
 };
 
-export const editCredits = async (credits:any, id:string) => {
+export const editCredits = async (credits: any, id: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/users/${id}`, {
@@ -152,7 +152,7 @@ export const editCredits = async (credits:any, id:string) => {
 };
 
 
-export const editStatus = async (status:string, id:string) => {
+export const editStatus = async (status: string, id: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/users/${id}`, {
@@ -176,7 +176,7 @@ export const editStatus = async (status:string, id:string) => {
   }
 };
 
-export const deleteClient = async (id:string) => {
+export const deleteClient = async (id: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/users/${id}`, {
@@ -199,7 +199,7 @@ export const deleteClient = async (id:string) => {
   }
 };
 
-export const getActivePlayers = async (page:number) => {
+export const getActivePlayers = async (page: number) => {
   const token = await getCookie();
   try {
     const response = await fetch(
@@ -246,7 +246,7 @@ export const getPlatform = async () => {
   }
 };
 
-export const getGames = async (platform:string, category:string) => {
+export const getGames = async (platform: string, category: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(
@@ -270,7 +270,7 @@ export const getGames = async (platform:string, category:string) => {
   }
 };
 
-export const editGames = async (game:any, id:string) => {
+export const editGames = async (game: any, id: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/games/${id}`, {
@@ -294,7 +294,7 @@ export const editGames = async (game:any, id:string) => {
   }
 };
 
-export const addPayout = async (payout:any) => {
+export const addPayout = async (payout: any) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/payouts`, {
@@ -313,12 +313,12 @@ export const addPayout = async (payout:any) => {
     return data;
   } catch (error) {
     throw error;
-  }finally {
+  } finally {
     revalidatePath("/game");
   }
 };
 
-export const fetchPayoutversion = async (tagname:string, platform:string) => {
+export const fetchPayoutversion = async (tagname: string, platform: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(
@@ -339,14 +339,14 @@ export const fetchPayoutversion = async (tagname:string, platform:string) => {
     const data = await response.json();
     return data;
   } catch (error) {
-  }finally {
+  } finally {
     revalidatePath("/game");
   }
 };
 
 
 
-export const deletePayout = async (tagname:string, version:string) => {
+export const deletePayout = async (tagname: string, version: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(
@@ -372,7 +372,7 @@ export const deletePayout = async (tagname:string, version:string) => {
   }
 };
 
-export const setPayoutActive = async (tagname:string, version:string, platform:string) => {
+export const setPayoutActive = async (tagname: string, version: string, platform: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/payouts/${tagname}`, {
@@ -395,7 +395,7 @@ export const setPayoutActive = async (tagname:string, version:string, platform:s
   }
 };
 
-export const addGame = async (game:any) => {
+export const addGame = async (game: any) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/games`, {
@@ -420,7 +420,7 @@ export const addGame = async (game:any) => {
 };
 
 
-export const deleteGame = async (platform:string, id:string) => {
+export const deleteGame = async (platform: string, id: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(
@@ -446,7 +446,7 @@ export const deleteGame = async (platform:string, id:string) => {
   }
 };
 
-export const getSubordinates = async (id:string) => {
+export const getSubordinates = async (id: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/users/${id}`, {
@@ -470,7 +470,7 @@ export const getSubordinates = async (id:string) => {
   }
 };
 
-export const getSubordinateTransactions = async (id:number, page:string) => {
+export const getSubordinateTransactions = async (id: number, page: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(
@@ -480,7 +480,7 @@ export const getSubordinateTransactions = async (id:number, page:string) => {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Cookie: `userToken=${token}`, 
+          Cookie: `userToken=${token}`,
         },
         next: { tags: ["client"] },
       }
@@ -495,7 +495,7 @@ export const getSubordinateTransactions = async (id:number, page:string) => {
   }
 };
 
-export const getSubordinateClients = async (id:string, page:number) => {
+export const getSubordinateClients = async (id: string, page: number) => {
   const token = await getCookie();
   try {
     const response = await fetch(
@@ -517,22 +517,22 @@ export const getSubordinateClients = async (id:string, page:number) => {
     const data = await response.json();
     return { data };
   } catch (error) {
-  }finally {
+  } finally {
     revalidatePath("/clients");
   }
 };
 
 
 
-export const addPlatform = async (platform:any) => {
+export const addPlatform = async (platform: any) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/games/platforms`, {
       method: "POST",
       credentials: "include",
-      body: JSON.stringify(platform), 
+      body: JSON.stringify(platform),
       headers: {
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
         Cookie: `userToken=${token}`,
       },
     });
@@ -572,7 +572,7 @@ export const getToggle = async () => {
   }
 };
 
-export const UpdateMaintenance = async (availableAt:string) => {
+export const UpdateMaintenance = async (availableAt: string) => {
   const token = await getCookie();
   try {
     const response = await fetch(`${config.server}/api/toggle`, {
@@ -596,7 +596,7 @@ export const UpdateMaintenance = async (availableAt:string) => {
 };
 
 
-export const GetAllClients = async (search: string, page: number, query?: any,sort?:string) => {
+export const GetAllClients = async (search: string, page: number, query?: any, sort?: string) => {
   const token = await getCookie();
   try {
     let filterQuery = '';
@@ -604,7 +604,7 @@ export const GetAllClients = async (search: string, page: number, query?: any,so
       if (query?.credits?.From > 0 && query?.credits?.To > 0) {
         filterQuery = JSON.stringify(query);
       }
-      
+
     }
     const response = await fetch(
       `${config.server}/api/users/all?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort}`,
@@ -627,7 +627,7 @@ export const GetAllClients = async (search: string, page: number, query?: any,so
   }
 };
 
-export const GetMyClients = async (search:string,page:number,query?:any,sort?:string) => {
+export const GetMyClients = async (search: string, page: number, query?: any, sort?: string) => {
   const token = await getCookie();
   try {
     let filterQuery = '';
@@ -635,9 +635,9 @@ export const GetMyClients = async (search:string,page:number,query?:any,sort?:st
       if (query?.credits?.From > 0 && query?.credits?.To > 0) {
         filterQuery = JSON.stringify(query);
       }
-      
+
     }
-    
+
     const response = await fetch(
       `${config.server}/api/users/subordinates?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort}`,
       {
@@ -671,7 +671,7 @@ export const GetMyTransactions = async (search: string, page: number, query?: an
   }
   try {
     const response = await fetch(
-      `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort}&type=${type||''}`,
+      `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort}&type=${type || ''}`,
       {
         method: "GET",
         credentials: "include",
@@ -691,7 +691,7 @@ export const GetMyTransactions = async (search: string, page: number, query?: an
   }
 };
 
-export const GetAllTransactions = async (search:string,page:number, query?:any,sort?:string) => {
+export const GetAllTransactions = async (search: string, page: number, query?: any, sort?: string) => {
   const token = await getCookie();
   let filterQuery = "{}";
   let username = "";
@@ -757,11 +757,15 @@ export const getGameHistory = async (startDate: string, endDate: string, playerI
     });
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.message);
+      throw new Error(error.message || 'Failed to fetch game history');
     }
     const data = await response.json();
     return { data };
   } catch (error) {
+    return {
+      data: null,
+      error: error instanceof Error ? error.message : 'An unexpected error occurred'
+    }
   }
 };
 
