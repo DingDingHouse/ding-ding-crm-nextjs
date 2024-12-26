@@ -136,6 +136,12 @@ export default function ActiveUsers() {
             <div className="flex items-center flex-wrap gap-2">
               <div className="bg-gray-200 dark:bg-gray-900 px-4 py-2 rounded-md">
                 <div className="flex items-center space-x-2">
+                  <span className="font-semibold text-black dark:text-white">Current Credit : </span>
+                  <span className="text-gray-700 dark:text-gray-300">{selectedUser?.currentCredits}</span>
+                </div>
+              </div>
+              <div className="bg-gray-200 dark:bg-gray-900 px-4 py-2 rounded-md">
+                <div className="flex items-center space-x-2">
                   <span className="font-semibold text-black dark:text-white">Game Id : </span>
                   <span className="text-gray-700 dark:text-gray-300">{selectedUser?.currentGame?.gameId}</span>
                 </div>
