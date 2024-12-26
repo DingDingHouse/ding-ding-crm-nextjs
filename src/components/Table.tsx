@@ -34,19 +34,19 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
     const handleOpen = (index: any) => {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle the dropdown for the clicked index
     };
-    
+
 
     useEffect(() => {
-        const user= Cookies.get("userToken");
+        const user = Cookies.get("userToken");
         if (user) {
             const decodedUser: any = jwt.decode(user);
-            const roles:any = rolesHierarchy(decodedUser.role)            
+            const roles: any = rolesHierarchy(decodedUser.role)
             setRoles(roles)
         }
     }, [])
-    
 
-    const buttons = page === 'game' ? ['Edit Game', 'Manage Payout'] : ['Change  Password', 'Recharge', 'Redeem', 'Update Status', 'Game History']
+
+    const buttons = page === 'game' ? ['Edit Game', 'Manage Payout'] : ['Change  Password', 'Recharge', 'Redeem', 'Update Status']
 
     const handelOpenModal = (type: string, id: string, prevStatus: string, Username: string, prevGameData: any, TagName: string, Platform: string, gameName: string) => {
         setModalType({ Type: type, id: id, prevStatus: prevStatus, Username: Username, PrevGameData: prevGameData, TagName: TagName, platform: Platform, gameName: gameName });
@@ -81,14 +81,13 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
         case "Manage Payout":
             ModalContent = <GamePayout id={modalType?.id} closeModal={handelCloseModal} platform={gamePlatform} tagname={modalType?.TagName} />
             break;
-        case "Game History":
-            ModalContent = <GetPlayerGameHistory closeModal={handelCloseModal} username={modalType?.Username} />
-            break;
+
         default:
             ModalContent = null;
     }
 
     const popup = [0, 1]
+
 
     const handelInputRange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRange({ ...range, [e.target.name]: parseInt(e.target.value) })
@@ -116,7 +115,7 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                                     <th key={th} scope="col" className="px-6 py-3  text-left">
                                         <div className='flex items-center'>
                                             {th}
-                                            {th === 'credits'&& page!=='subordinates' && <div className='relative pt-1 inline-block'>
+                                            {th === 'credits' && page !== 'subordinates' && <div className='relative pt-1 inline-block'>
                                                 <button onClick={() => setOpenRange(true)} className='rotate-[90deg]'><Arrow_Right /></button>
                                                 <div className={`flex ${openRange ? 'scale-100' : 'scale-0'} z-[51] transition-all items-center p-1 rounded gap-x-2 absolute right-0 bg-gray-300 dark:bg-gray-500 top-[100%]`}>
                                                     <input onKeyDown={(e) => handelSearchByCreditRange(e)} onChange={(e) => handelInputRange(e)} value={range?.From} name='From' type="number" className='p-2 rounded bg-gray-200 dark:bg-gray-400 outline-none dark:text-white placeholder:text-gray-500 ' placeholder='From...' />
@@ -162,7 +161,7 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                                             <td key={td} className={tdClass}>
                                                 {td === "updatedAt" ? new Date(item[td]).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
                                                     : td === 'thumbnail' ? <Image src={item[td]} alt={item[td]} quality={100} width={400} height={400} className="w-[80px]" />
-                                                        : td === 'username' ? <Link href={roles?.includes(item?.role)?`/clients/${item?._id}`:'#'} className="hover:text-[#FFD117] hover:scale-110 inline-block transition-all">{item[td]}</Link>
+                                                        : td === 'username' ? <Link href={roles?.includes(item?.role) ? `/clients/${item?._id}` : '#'} className="hover:text-[#FFD117] hover:scale-110 inline-block transition-all">{item[td]}</Link>
                                                             : item[td]}
                                             </td>
                                         );
@@ -179,7 +178,7 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                                                         <ul className="py-2 text-sm text-gray-700 px-2 dark:text-gray-200" aria-labelledby="dropdownDelayButton">
                                                             {buttons.map((button, index) => (
                                                                 <li key={index}>
-                                                                    <button onClick={() => handelOpenModal(button, item?._id, item?.status, item?.username, item, item?.tagName, '', '')} className={`block ${item?.role !== 'player' && button === 'Game History' ? 'hidden' : 'block'} w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md text-start dark:hover:text-white ${button === 'Change Password' ? 'text-blue-600' : ''}`}>
+                                                                    <button onClick={() => handelOpenModal(button, item?._id, item?.status, item?.username, item, item?.tagName, '', '')} className={`block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md text-start dark:hover:text-white ${button === 'Change Password' ? 'text-blue-600' : ''}`}>
                                                                         {button}
                                                                     </button>
                                                                 </li>

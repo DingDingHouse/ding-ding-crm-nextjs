@@ -15,9 +15,10 @@ const EditGames = ({ id, closeModal, platform, prevData }: any) => {
         slug: prevData.slug,
         url: prevData.url,
         thumbnail: prevData.thumbnail,
+        description: prevData.description,
     });
 
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, files } = e.target;
         setGame({
             ...game,
@@ -25,7 +26,7 @@ const EditGames = ({ id, closeModal, platform, prevData }: any) => {
         });
     };
 
-    const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (
             game.url === "" ||
@@ -60,7 +61,7 @@ const EditGames = ({ id, closeModal, platform, prevData }: any) => {
     return (
         <>
             <form
-                onSubmit={(e)=>handleSubmit(e)}
+                onSubmit={(e) => handleSubmit(e)}
                 className="grid grid-cols-2 gap-y-3 lg:gap-4 overflow-hidden lg:px-5"
             >
                 <p className="text-left font-light dark:text-white ">Name :</p>
@@ -138,6 +139,13 @@ const EditGames = ({ id, closeModal, platform, prevData }: any) => {
                     className="text-left font-extralight text-gray-400 focus:outline-none bg-transparent w-full border-b-[1px] border-[#dfdfdf2e] "
                     id="fileUpload"
                     accept="image/*"
+                />
+                <p className="text-left font-light dark:text-white ">Description :</p>
+                <input
+                    name="description"
+                    onChange={handleChange}
+                    value={game.description}
+                    className="text-left font-extralight text-gray-400 focus:outline-none bg-transparent w-full border-b-[1px] border-[#dfdfdf2e] "
                 />
                 <div className="col-span-2 flex justify-center mt-2">
                     <button
