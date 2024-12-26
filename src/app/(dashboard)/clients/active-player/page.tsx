@@ -19,7 +19,7 @@ export default function ActiveUsers() {
   const selectedUser = selectedUserId ? activeUsers[selectedUserId] : null;
   const [sessionData, setSessionData] = useState<any[]>([]);
   const [entryDate, setEntryDate] = useState<string>("");
-    const [showFilter,setShowFilter]=useState(false)
+  const [showFilter, setShowFilter] = useState(false)
   const filteredUsers = Object.entries(activeUsers).filter(([playerId]) =>
     playerId.toLowerCase().includes(searchTerm.toLowerCase())
   );
