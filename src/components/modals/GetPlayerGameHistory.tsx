@@ -4,6 +4,11 @@ import * as XLSX from "xlsx";
 import Arrow_Left from "../svg/Arrow_Left";
 import Arrow_Right from "../svg/Arrow_Right";
 import { getGameHistory } from "@/utils/action";
+import { SessionSpinChart } from "../SessionSpinChart";
+import { TimeDisplay } from "./TimeDisplay";
+import { StatsCard } from "./StatsCard";
+import { WinPercentageChart } from "../WinPercentageChart";
+
 
 const PlayerGameHistory = ({ username }: { username: string }) => {
     const [sessionData, setSessionData] = useState<any[]>([]);
@@ -55,9 +60,13 @@ const PlayerGameHistory = ({ username }: { username: string }) => {
                 page
             );
 
+
+
             if (error) {
                 throw new Error(error);
             }
+
+            console.log("PLAYER GAME HISTORY", data);
 
             setSessionData(data.sessionData);
             setPagination(data.pagination);
@@ -255,7 +264,7 @@ const PlayerGameHistory = ({ username }: { username: string }) => {
                 </div>
             </div>
 
-            <div className="space-y-2 overflow-y-auto sm:h-[62vh] pr-4 custom-scrollbar">
+            <div className="space-y-2 overflow-y-auto  pr-4 custom-scrollbar">
                 {load ? (
                     <div className="fixed zindex top-0 left-0 w-full h-full">
                         <div className="w-full h-full relative  flex items-center justify-center">
@@ -265,113 +274,83 @@ const PlayerGameHistory = ({ username }: { username: string }) => {
                         </div>
                     </div>
                 ) : sessionData?.length > 0 ? (
-                    sessionData?.map((item, ind) => (
-                        <div key={ind} className="mt-6 bg-gray-700  rounded-xl">
-                            <div
-                                className={`bg-gray-700 p-6  ${item?.gameSessions?.length === 0
-                                    ? "rounded-xl"
-                                    : "rounded-tl-xl rounded-tr-xl"
-                                    }  hover:shadow-xl transition-shadow duration-300`}
-                            >
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                    <InfoItem
-                                        label="Platform Entry"
-                                        value={new Date(item?.entryTime).toLocaleString('en-GB', {
-                                            day: '2-digit',
-                                            month: 'short',
-                                            year: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            hour12: true
-                                        })}
-                                    />
-                                    <InfoItem
-                                        label="Platform Exit"
-                                        value={new Date(item?.exitTime).toLocaleString('en-GB', {
-                                            day: '2-digit',
-                                            month: 'short',
-                                            year: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            hour12: true
-                                        })}
-                                    />
-                                    {item?.gameSessions?.length === 0 && (
-                                        <InfoItem label="Game Played?" value={"No"} />
-                                    )}
+                    sessionData?.map((platformSession, ind) => (
+                        // Platform Session Data
+                        <div key={ind} className="border border-gray-500 rounded-xl ">
+
+                            <div className="p-4 flex flex-col space-y-4">
+                                <div className=" grid grid-cols-1 md:grid-cols-2 gap-4 ">
+                                    <TimeDisplay label="Platform Entry" timestamp={platformSession?.entryTime} />
+                                    <TimeDisplay label="Platform Exit" timestamp={platformSession?.exitTime} />
                                 </div>
-                            </div>
-                            {item?.gameSessions?.map((subitem: any, index: number) => (
-                                <div
-                                    key={index}
-                                    className=" p-6   shadow-lg hover:shadow-xl transition-shadow duration-300"
-                                >
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                        <InfoItem label="Game Id" value={subitem?.gameId} />
-                                        <InfoItem
-                                            label="Credits at Entry"
-                                            value={subitem?.creditsAtEntry}
-                                        />
-                                        <InfoItem label="Total Spins" value={subitem?.totalSpins} />
-                                        <InfoItem
-                                            label="Total Bet Amount"
-                                            value={subitem?.totalBetAmount}
-                                        />
-                                        <InfoItem
-                                            label="Total Win Amount"
-                                            value={subitem?.totalWinAmount}
-                                        />
-                                        <InfoItem
-                                            label="Game Session"
-                                            value={subitem?.sessionDuration}
-                                        />
-                                        <InfoItem
-                                            label="Entry Time"
-                                            value={new Date(subitem?.entryTime).toLocaleString('en-GB', {
-                                                day: '2-digit',
-                                                month: 'short',
-                                                year: 'numeric',
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                                hour12: true
-                                            })}
-                                        />
-                                        <InfoItem
-                                            label="Exit Time"
-                                            value={new Date(subitem?.exitTime).toLocaleString('en-GB', {
-                                                day: '2-digit',
-                                                month: 'short',
-                                                year: 'numeric',
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                                hour12: true
-                                            })}
-                                        />
-                                    </div>
-                                    {subitem?.spinData?.length > 0 && (
-                                        <div className="mt-6">
-                                            <h4 className="text-base sm:text-lg lg:text-xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#ffd117] to-[#c65d02]">
-                                                Spin Data:
-                                            </h4>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4  overflow-y-auto pr-2 custom-scrollbar">
-                                                {subitem?.spinData?.map((spin: any, index: number) => (
-                                                    <div
-                                                        key={index}
-                                                        className="bg-gray-600 p-3 rounded-lg text-xs sm:text-sm flex justify-between items-center"
-                                                    >
-                                                        <span className="font-medium text-gray-300">
-                                                            Bet: {spin.betAmount}
-                                                        </span>
-                                                        <span className="font-medium text-green-400">
-                                                            Win: {spin.winAmount}
-                                                        </span>
-                                                    </div>
-                                                ))}
-                                            </div>
+
+                                {platformSession?.gameSessions?.length > 0 && (
+                                    <div className="bg-slate-800 rounded-lg p-4">
+                                        <div className=" p-4">
+                                            <h2 className=" text-xl text-white">Game Sessions</h2>
                                         </div>
-                                    )}
-                                </div>
-                            ))}
+                                        {platformSession?.gameSessions?.length > 0 && platformSession.gameSessions.map((gameSession: any, index: number) => {
+                                            const chartData = gameSession.spinData.map((spin: any, index: number) => ({
+                                                spin: index + 1,
+                                                winPercentage: spin.betAmount > 0 ? (spin.winAmount / spin.betAmount) * 100 : 0,
+                                                betAmount: spin.betAmount,
+                                                winAmount: spin.winAmount,
+                                            }));
+
+                                            const totalWinPercentage: number = gameSession.spinData.reduce(
+                                                (sum: number, spin: { betAmount: number; winAmount: number }) => sum + (spin.betAmount > 0 ? (spin.winAmount / spin.betAmount) * 100 : 0),
+                                                0
+                                            );
+
+                                            const averageWinPercentage = gameSession.spinData.length > 0 ? totalWinPercentage / gameSession.spinData.length : 0;
+
+                                            return (
+                                                <div className=" bg-slate-700  p-4 rounded-lg flex flex-col gap-4">
+                                                    <div className="grid grid-cols-1 p-4">
+                                                        <h3 className="text-white text-xl font-bold"> #{index + 1}</h3>
+                                                    </div>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                        <StatsCard label="Game ID" value={gameSession.gameId} />
+                                                        <StatsCard label="Game Name" value={gameSession.gameName} />
+                                                        <StatsCard
+                                                            label="Credits at Entry"
+                                                            value={gameSession.creditsAtEntry.toLocaleString()}
+                                                        />
+                                                    </div>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                                        <StatsCard label="Total Spins" value={gameSession.totalSpins} />
+                                                        <StatsCard
+                                                            label="Total Bet Amount"
+                                                            value={gameSession.totalBetAmount.toFixed(3)}
+                                                        />
+                                                        <StatsCard
+                                                            label="Total Win Amount"
+                                                            value={gameSession.totalWinAmount.toFixed(3)}
+                                                        />
+                                                        <WinPercentageChart percentage={averageWinPercentage} />
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                        <TimeDisplay label="Entry Time" timestamp={gameSession.entryTime} />
+                                                        <TimeDisplay label="Exit Time" timestamp={gameSession.exitTime} />
+                                                        <StatsCard
+                                                            label="Credits at Exit"
+                                                            value={gameSession.creditsAtExit.toLocaleString()}
+                                                        />
+                                                    </div>
+
+                                                    <div>
+                                                        <SessionSpinChart spinData={gameSession.spinData} />
+                                                    </div>
+
+                                                </div>
+                                            )
+                                        })}
+
+                                    </div>
+                                )}
+
+                            </div>
                         </div>
                     ))
                 ) : (
@@ -412,19 +391,5 @@ const PlayerGameHistory = ({ username }: { username: string }) => {
     );
 };
 
-const InfoItem = ({
-    label,
-    value,
-}: {
-    label: string;
-    value: string | number;
-}) => (
-    <div className="bg-gray-600 px-4 py-3 rounded-lg shadow">
-        <p className="text-xs sm:text-sm text-gray-400 mb-1">{label}</p>
-        <p className="text-sm sm:text-base lg:text-lg font-semibold text-gray-100">
-            {value}
-        </p>
-    </div>
-);
 
 export default PlayerGameHistory;

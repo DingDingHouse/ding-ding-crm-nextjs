@@ -35,6 +35,7 @@ export interface Bonus {
 export interface CurrentGame {
     playerId: string,
     gameId: string,
+    gameName: string,
     sessionId: string,
     entryTime: Date;
     exitTime: Date | null;
