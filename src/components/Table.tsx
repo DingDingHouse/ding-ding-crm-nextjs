@@ -106,7 +106,7 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
 
     return (
         <>
-            <div className="relative shadow-md  overflow-auto lg:overflow-visible rounded">
+            <div className="relative shadow-md h-[75vh] lg:h-auto overflow-auto lg:overflow-visible rounded">
                 <table className="w-full text-sm text-left rtl:text-right rounded text-gray-500 dark:text-gray-400">
                     <thead className="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
