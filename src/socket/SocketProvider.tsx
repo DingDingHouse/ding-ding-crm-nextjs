@@ -46,7 +46,7 @@ export const SocketProvider: React.FC<{
       });
 
       socketInstance.on("activePlayers", (activePlayersData) => {
-        activePlayersData.forEach((player:any) => {
+        activePlayersData.forEach((player: any) => {
           dispatch(
             addPlayer({
               playerId: player.playerId,
@@ -149,6 +149,7 @@ export const SocketProvider: React.FC<{
     const {
       playerId,
       gameId,
+      gameName,
       sessionId,
       entryTime,
       exitTime,
@@ -165,6 +166,7 @@ export const SocketProvider: React.FC<{
       enterGame({
         playerId,
         gameId,
+        gameName,
         sessionId,
         entryTime: new Date(entryTime), // Pass Date object directly
         exitTime: exitTime ? new Date(exitTime) : null, // Keep as Date or null
@@ -180,7 +182,7 @@ export const SocketProvider: React.FC<{
 
   };
 
-  
+
 
   const handleExitedGame = (payload: any) => {
     const { playerId } = payload;
@@ -194,7 +196,7 @@ export const SocketProvider: React.FC<{
 
   const hadleCurrentUserCredits = (payload: any) => {
     const { credits, role } = payload;
-    if (role==="admin") {
+    if (role === "admin") {
       dispatch(setUsercredit('∞'));
     } else {
       dispatch(setUsercredit(credits));
