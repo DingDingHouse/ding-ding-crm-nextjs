@@ -769,5 +769,31 @@ export const getGameHistory = async (startDate: string, endDate: string, playerI
   }
 };
 
+export const ChangeGamesOrder = async (games: any) => {
+  try {
+    const token = await getCookie();
+    const response = await fetch(`${config.server}/api/games/update-game-order`, {
+      method: "PUT",
+      body: JSON.stringify(games),
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `userToken=${token}`,
+      },
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to fetch game history');
+    }
+    const data = await response.json();
+    return { data };
+  } catch (error) {
+    return {
+      data: null,
+      error: error instanceof Error ? error.message : 'An unexpected error occurred'
+    }
+  }
+};
+
 
 
