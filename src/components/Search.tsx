@@ -7,9 +7,16 @@ import { useAppDispatch, useAppSelector } from '@/utils/hooks'
 import { setDatasorting } from '@/redux/ReduxSlice'
 import Order from './svg/Order'
 import { ChangeGamesOrder } from '@/utils/action'
+import toast from 'react-hot-toast'
+import { setDragedData } from '@/redux/gameorder/gameorderSlice'
+import Loader from '@/utils/Load'
 
-const Search = ({page}:any) => {
+
+
+const Search = ({ page, platform }: any) => {
     const [search, setSearch] = useState('')
+    const [loading, setLoading] = useState(false)
+
     const dispatch = useAppDispatch()
     const sort = useAppSelector((state) => state?.globlestate?.isDataSorting)
     const dragedData = useAppSelector((state) => state?.game?.dragedGameData)
@@ -30,12 +37,35 @@ const Search = ({page}:any) => {
         setSearch('')
     }
 
-    const handelChangeOrder = async(dragedData:any) => {
+    const handelChangeOrder = async (dragedData: any) => {
+        setLoading(true)
+        console.log("PLATFORM : ", platform)
+
+        const formattedData = {
+            gameOrders: dragedData.map((game: any) => ({
+                gameId: game._id,
+                order: game.order
+            })),
+            platformName: platform
+        };
+
         try {
-            const response = await ChangeGamesOrder(dragedData)
-            console.log(response)
+            const response = await ChangeGamesOrder(formattedData)
+            if (response.data?.message) {
+                toast.success(response.data?.message)
+            } else {
+                toast.error(response.error || "An unexpected error occurred")
+            }
         } catch (error) {
+            if (error instanceof Error) {
+                toast.error(error.message || "An error occurred")
+            } else {
+                toast.error("An error occurred")
+            }
             console.log(error)
+        } finally {
+            setLoading(false)
+            dispatch(setDragedData([]))
         }
     }
 
@@ -61,12 +91,15 @@ const Search = ({page}:any) => {
                     </button>
                 </div>
             </div>
-            {page!=='game'&&<div className='text-white relative'>
+            {page !== 'game' && <div className='text-white relative'>
                 <button onClick={handelSort} className='bg-white bg-opacity-15 px-3 py-1.5 rounded-md shadow-inner hover:scale-90 transition-all'><Sort /></button>
             </div>}
-            {page==='game'&&dragedData?.length>0&&<div className='text-white relative'>
-                <button onClick={()=>handelChangeOrder(dragedData)} className='bg-white bg-opacity-15 px-3 py-1.5 rounded-md shadow-inner hover:scale-90 transition-all'><Order /></button>
+            {page === 'game' && dragedData?.length > 0 && <div className='text-white relative'>
+                <button onClick={() => handelChangeOrder(dragedData)} className='test bg-white bg-opacity-15 px-3 py-1.5 rounded-md shadow-inner hover:scale-90 transition-all'>
+                    <Order />
+                </button>
             </div>}
+            {loading && <Loader />}
         </div>
     )
 }

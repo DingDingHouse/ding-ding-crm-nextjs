@@ -769,12 +769,12 @@ export const getGameHistory = async (startDate: string, endDate: string, playerI
   }
 };
 
-export const ChangeGamesOrder = async (games:any) => {
+export const ChangeGamesOrder = async (games: any) => {
   try {
     const token = await getCookie();
     const response = await fetch(`${config.server}/api/games/update-game-order`, {
       method: "PUT",
-      body:JSON.stringify({gameOrders:games}),
+      body: JSON.stringify(games),
       credentials: "include",
       headers: {
         "Content-Type": "application/json",

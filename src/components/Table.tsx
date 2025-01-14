@@ -20,7 +20,7 @@ import { rolesHierarchy } from '@/utils/common'
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
 import { useAppDispatch } from '@/utils/hooks'
-import { setDragedData} from '@/redux/gameorder/gameorderSlice'
+import { setDragedData } from '@/redux/gameorder/gameorderSlice'
 
 
 
@@ -31,7 +31,13 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
     const [range, setRange] = useState({ From: '', To: '' });
     const [openRange, setOpenRange] = useState(false)
     const [roles, setRoles] = useState<any>([])
-    const [tabledata, setTableData] = useState([])
+    interface TableDataItem {
+        _id: string;
+        order?: number;
+        [key: string]: any;
+    }
+
+    const [tabledata, setTableData] = useState<TableDataItem[]>([])
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -41,11 +47,11 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
     };
 
     useEffect(() => {
-        if (data?.length>0) {
-            setTableData(data)            
+        if (data?.length > 0) {
+            setTableData(data)
         }
     }, [data])
-    
+
 
     useEffect(() => {
         const user = Cookies.get("userToken");
@@ -120,29 +126,35 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
     const handleDragStart = (index: number) => {
         setDraggedIndex(index);
     };
-  
+
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
+        e.preventDefault();
     };
-  
-    const handleDrop = (index: number) => {
-        if (draggedIndex === null) return;
-    
-        const updatedItems = [...tabledata];
-        const [draggedItem] = updatedItems.splice(draggedIndex, 1);
-        updatedItems.splice(index, 0, draggedItem);
-    
-        const hasSequenceChanged = JSON.stringify(updatedItems) !== JSON.stringify(data);
-    
-        if (hasSequenceChanged) {
-            dispatch(setDragedData(updatedItems));
-        } else {
-            dispatch(setDragedData([]));            
+
+    const handleDrop = (dropIndex: number) => {
+        if (page !== 'game') return;
+
+        if (draggedIndex !== null) {
+            const draggedItem = tabledata[draggedIndex];
+            const updatedTableData = [...tabledata];
+
+            // Remove the dragged item from its original position
+            updatedTableData.splice(draggedIndex, 1);
+
+            // Insert the dragged item at the drop position
+            updatedTableData.splice(dropIndex, 0, draggedItem);
+
+            // Create a new array with updated order property
+            const newTableData = updatedTableData.map((item, index) => ({
+                ...item,
+                order: index + 1
+            }));
+
+            setTableData(newTableData);
+            dispatch(setDragedData(newTableData));
         }
-        setTableData(updatedItems);
-        setDraggedIndex(null);
     };
-    
+
 
     return (
         <>
@@ -174,14 +186,13 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                         {tabledata?.length > 0 ? (
                             tabledata?.map((item: any, ind: number) => (
                                 <tr
-                                    draggable={page==='game'}
+                                    draggable={page === 'game'}
                                     onDragStart={() => handleDragStart(ind)}
                                     onDragOver={handleDragOver}
                                     onDrop={() => handleDrop(ind)}
                                     key={item?._id}
                                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                 >
-                                    {ind}
                                     {tableData?.Tbody?.map((td: any) => {
                                         let tdClass = "px-6 py-4 whitespace-nowrap text-base ";
 
