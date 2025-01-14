@@ -20,7 +20,7 @@ const Modal = ({ closeModal, modaltype, children }: any) => {
                 <div className='relative w-full  h-screen '>
                     <div
                         onClick={(e) => e.stopPropagation()}
-                        className={`fixed bg-white dark:bg-gray-700 rounded-xl overflow-y-auto p-4 w-full top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] ${modaltype?.Type === 'activePlayer' ? ' w-[80vw] h-[90vh]' : 'max-w-2xl max-h-[90vh]'}  `}
+                        className={`fixed bg-white dark:bg-gray-700 rounded-xl overflow-y-auto p-4 w-full top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] ${modaltype?.Type === 'activePlayer' ? ' w-[80vw] max-w-[80vw] h-[90vh]' : 'max-w-2xl max-h-[90vh]'}  `}
                     >
                         {children}
                     </div>
