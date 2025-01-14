@@ -5,11 +5,14 @@ import { usePathname, useRouter } from 'next/navigation'
 import Sort from './svg/Sort'
 import { useAppDispatch, useAppSelector } from '@/utils/hooks'
 import { setDatasorting } from '@/redux/ReduxSlice'
+import Order from './svg/Order'
+import { ChangeGamesOrder } from '@/utils/action'
 
-const Search = () => {
+const Search = ({page}:any) => {
     const [search, setSearch] = useState('')
     const dispatch = useAppDispatch()
-    const sort=useAppSelector((state)=>state?.globlestate?.isDataSorting)
+    const sort = useAppSelector((state) => state?.globlestate?.isDataSorting)
+    const dragedData = useAppSelector((state) => state?.game?.dragedGameData)
     const pathname = usePathname()
     const router = useRouter()
     const handelSearch = (e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLInputElement>) => {
@@ -27,6 +30,14 @@ const Search = () => {
         setSearch('')
     }
 
+    const handelChangeOrder = async(dragedData:any) => {
+        try {
+            const response = await ChangeGamesOrder(dragedData)
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <div className='flex items-center gap-x-5'>
@@ -50,9 +61,12 @@ const Search = () => {
                     </button>
                 </div>
             </div>
-            <div className='text-white relative'>
+            {page!=='game'&&<div className='text-white relative'>
                 <button onClick={handelSort} className='bg-white bg-opacity-15 px-3 py-1.5 rounded-md shadow-inner hover:scale-90 transition-all'><Sort /></button>
-            </div>
+            </div>}
+            {page==='game'&&dragedData?.length>0&&<div className='text-white relative'>
+                <button onClick={()=>handelChangeOrder(dragedData)} className='bg-white bg-opacity-15 px-3 py-1.5 rounded-md shadow-inner hover:scale-90 transition-all'><Order /></button>
+            </div>}
         </div>
     )
 }

@@ -19,7 +19,7 @@ const page = async ({ params,searchParams }: any) => {
   return (
     <div className='pt-5'>
       <div className='pb-5'>
-        <Search />
+        <Search page={'game'} />
       </div>
       <Table page={'game'} gamePlatform={params?.plateform} data={finalGames} tableData={tableData} />
     </div>

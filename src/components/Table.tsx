@@ -19,6 +19,8 @@ import GetPlayerGameHistory from './modals/GetPlayerGameHistory'
 import { rolesHierarchy } from '@/utils/common'
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
+import { useAppDispatch } from '@/utils/hooks'
+import { setDragedData} from '@/redux/gameorder/gameorderSlice'
 
 
 
@@ -29,12 +31,21 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
     const [range, setRange] = useState({ From: '', To: '' });
     const [openRange, setOpenRange] = useState(false)
     const [roles, setRoles] = useState<any>([])
+    const [tabledata, setTableData] = useState([])
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const router = useRouter();
-    const pathname = usePathname()
+    const dispatch = useAppDispatch();
+    const pathname = usePathname();
     const handleOpen = (index: any) => {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle the dropdown for the clicked index
     };
 
+    useEffect(() => {
+        if (data?.length>0) {
+            setTableData(data)            
+        }
+    }, [data])
+    
 
     useEffect(() => {
         const user = Cookies.get("userToken");
@@ -104,6 +115,35 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
         }
     }
 
+
+    //Games Order Chaning Logic 
+    const handleDragStart = (index: number) => {
+        setDraggedIndex(index);
+    };
+  
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+    };
+  
+    const handleDrop = (index: number) => {
+        if (draggedIndex === null) return;
+    
+        const updatedItems = [...tabledata];
+        const [draggedItem] = updatedItems.splice(draggedIndex, 1);
+        updatedItems.splice(index, 0, draggedItem);
+    
+        const hasSequenceChanged = JSON.stringify(updatedItems) !== JSON.stringify(data);
+    
+        if (hasSequenceChanged) {
+            dispatch(setDragedData(updatedItems));
+        } else {
+            dispatch(setDragedData([]));            
+        }
+        setTableData(updatedItems);
+        setDraggedIndex(null);
+    };
+    
+
     return (
         <>
             <div className="relative shadow-md h-[75vh] lg:h-auto overflow-auto lg:overflow-visible rounded">
@@ -131,12 +171,17 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.length > 0 ? (
-                            data.map((item: any, ind: number) => (
+                        {tabledata?.length > 0 ? (
+                            tabledata?.map((item: any, ind: number) => (
                                 <tr
+                                    draggable={page==='game'}
+                                    onDragStart={() => handleDragStart(ind)}
+                                    onDragOver={handleDragOver}
+                                    onDrop={() => handleDrop(ind)}
                                     key={item?._id}
                                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                 >
+                                    {ind}
                                     {tableData?.Tbody?.map((td: any) => {
                                         let tdClass = "px-6 py-4 whitespace-nowrap text-base ";
 
