@@ -19,6 +19,8 @@ import GetPlayerGameHistory from './modals/GetPlayerGameHistory'
 import { rolesHierarchy } from '@/utils/common'
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
+import { useAppDispatch } from '@/utils/hooks'
+import { setDragedData } from '@/redux/gameorder/gameorderSlice'
 
 
 
@@ -29,11 +31,26 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
     const [range, setRange] = useState({ From: '', To: '' });
     const [openRange, setOpenRange] = useState(false)
     const [roles, setRoles] = useState<any>([])
+    interface TableDataItem {
+        _id: string;
+        order?: number;
+        [key: string]: any;
+    }
+
+    const [tabledata, setTableData] = useState<TableDataItem[]>([])
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const router = useRouter();
-    const pathname = usePathname()
+    const dispatch = useAppDispatch();
+    const pathname = usePathname();
     const handleOpen = (index: any) => {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle the dropdown for the clicked index
     };
+
+    useEffect(() => {
+        if (data?.length > 0) {
+            setTableData(data)
+        }
+    }, [data])
 
 
     useEffect(() => {
@@ -104,6 +121,46 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
         }
     }
 
+
+    //Games Order Chaning Logic 
+    const handleDragStart = (index: number) => {
+        setDraggedIndex(index);
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+    };
+
+    const handleDrop = (dropIndex: number) => {
+        if (page !== 'game') return;
+    
+        if (draggedIndex !== null) {
+            const draggedItem = tabledata[draggedIndex];
+            const updatedTableData = [...tabledata];
+    
+            updatedTableData.splice(draggedIndex, 1);
+    
+            updatedTableData.splice(dropIndex, 0, draggedItem);
+    
+            const newTableData = updatedTableData.map((item, index) => ({
+                ...item,
+                order: index + 1
+            }));
+    
+            setTableData(newTableData);
+    
+            const changedItems = newTableData.filter((item, index) => {
+                return data[index]?._id !== item._id || data[index]?.order !== item.order;
+            });
+    
+            if (changedItems.length > 0) {
+                dispatch(setDragedData(changedItems));
+            } else {
+                dispatch(setDragedData([]));
+            }
+        }
+    };
+
     return (
         <>
             <div className="relative shadow-md h-[75vh] lg:h-auto overflow-auto lg:overflow-visible rounded">
@@ -131,9 +188,13 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.length > 0 ? (
-                            data.map((item: any, ind: number) => (
+                        {tabledata?.length > 0 ? (
+                            tabledata?.map((item: any, ind: number) => (
                                 <tr
+                                    draggable={page === 'game'}
+                                    onDragStart={() => handleDragStart(ind)}
+                                    onDragOver={handleDragOver}
+                                    onDrop={() => handleDrop(ind)}
                                     key={item?._id}
                                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                 >
