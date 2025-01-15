@@ -133,28 +133,33 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
 
     const handleDrop = (dropIndex: number) => {
         if (page !== 'game') return;
-
+    
         if (draggedIndex !== null) {
             const draggedItem = tabledata[draggedIndex];
             const updatedTableData = [...tabledata];
-
-            // Remove the dragged item from its original position
+    
             updatedTableData.splice(draggedIndex, 1);
-
-            // Insert the dragged item at the drop position
+    
             updatedTableData.splice(dropIndex, 0, draggedItem);
-
-            // Create a new array with updated order property
+    
             const newTableData = updatedTableData.map((item, index) => ({
                 ...item,
                 order: index + 1
             }));
-
+    
             setTableData(newTableData);
-            dispatch(setDragedData(newTableData));
+    
+            const changedItems = newTableData.filter((item, index) => {
+                return data[index]?._id !== item._id || data[index]?.order !== item.order;
+            });
+    
+            if (changedItems.length > 0) {
+                dispatch(setDragedData(changedItems));
+            } else {
+                dispatch(setDragedData([]));
+            }
         }
     };
-
 
     return (
         <>
