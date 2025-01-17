@@ -145,6 +145,7 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
 
     const handelChangeOrder = async (dragedData: any) => {
         setLoading(true);
+        console.log("CURRENT PAGE ; ", platform)
 
         const formattedData = {
             gameOrders: dragedData.map((game: any) => ({
