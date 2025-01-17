@@ -786,7 +786,7 @@ export const ChangeGamesOrder = async (games: any) => {
       throw new Error(error.message || 'Failed to fetch game history');
     }
     const data = await response.json();
-    // revalidatePath("/game/*");
+    revalidatePath("/game/*");
     return { data };
   } catch (error) {
     return {
