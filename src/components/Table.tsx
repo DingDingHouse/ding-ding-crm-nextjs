@@ -49,8 +49,7 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
     const dispatch = useAppDispatch();
     const pathname = usePathname();
 
-    const platform = pathname.split('/')[2];
-
+    const platform = pathname.match(/game\/([^/]+)/)?.[1] || '';
 
     const handleOpen = (index: any) => {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle the dropdown for the clicked index
