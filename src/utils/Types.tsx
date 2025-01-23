@@ -6,7 +6,11 @@ export interface SpinData {
     spinId: string;
     betAmount: number;
     winAmount: number;
-    specialFeatures?: SpecialFeatures;
+    specialFeatures?: {
+        jackpot?: { amountWon: number }
+        scatter?: { amountWon: number }
+        bonus?: { amountWon: number }
+    }
 }
 
 export interface SpecialFeatures {

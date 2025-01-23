@@ -153,6 +153,17 @@ const AddClient = () => {
             }
           </select>
 
+          <p className="text-left font-light">Credits :</p>
+          <div className="flex justify-between w-full gap-2">
+            <input
+              name="credits"
+              type="number"
+              onChange={(e) => handleChange(e)}
+              value={user.credits}
+              className="text-left font-extralight text-gray-400 focus:outline-none bg-transparent w-full border-b-[1px] border-gray-300 dark:border-[#dfdfdf2e] "
+            />
+          </div>
+
           <div className="col-span-2 flex justify-center mt-2">
             <button
               type="submit"
