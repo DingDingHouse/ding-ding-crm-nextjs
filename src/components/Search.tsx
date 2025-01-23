@@ -20,7 +20,6 @@ const Search = ({ page, platform }: any) => {
     const dispatch = useAppDispatch()
     const sort = useAppSelector((state) => state?.globlestate?.isDataSorting)
     const dragedData = useAppSelector((state) => state?.game?.dragedGameData)
-    console.log(dragedData,"draged")
     const pathname = usePathname()
     const router = useRouter()
     const handelSearch = (e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLInputElement>) => {

@@ -4,14 +4,14 @@ export const reduxSlice = createSlice({
   name: "globlestate",
   initialState: {
     showSideBar: false,
-    isDataSorting:false
+    isDataSorting: false
   },
   reducers: {
-    setSidebarshow: (state,action) => {
-      state.showSideBar=action.payload
+    setSidebarshow: (state, action) => {
+      state.showSideBar = action.payload
     },
     setDatasorting: (state, action) => {
-      state.isDataSorting=action.payload
+      state.isDataSorting = action.payload
     }
   },
 });
