@@ -171,7 +171,7 @@ export default function ActiveUsers() {
                   />
                   <StatsCard
                     label="Credits at Entry"
-                    value={selectedUser?.currentGame?.creditsAtEntry || ""}
+                    value={selectedUser?.currentGame?.creditsAtEntry.toFixed(3) || ""}
                   />
                   <StatsCard
                     label="Total Spins"
@@ -195,26 +195,21 @@ export default function ActiveUsers() {
                   />
                   <StatsCard
                     label="Total Bet Amount"
-                    value={selectedUser?.currentGame?.totalBetAmount || 0}
+                    value={selectedUser?.currentGame?.totalBetAmount.toFixed(3) || 0}
                   />
                   <StatsCard
                     label="Total Win Amount"
-                    value={selectedUser?.currentGame?.totalWinAmount || 0}
+                    value={selectedUser?.currentGame?.totalWinAmount.toFixed(3) || 0}
                   />
                   <StatsCard
                     label="Credits at Exit"
-                    value={selectedUser?.currentGame?.creditsAtExit || ""}
+                    value={selectedUser?.currentGame?.creditsAtExit.toFixed(3) || ""}
                   />
                 </div>
 
                 {selectedUser?.currentGame?.spinData &&
                   selectedUser?.currentGame?.spinData.length > 0 && (
                     <>
-                      <div>
-                        <SessionSpinChart
-                          spinData={selectedUser?.currentGame?.spinData || []}
-                        />
-                      </div>
                       <div className="mt-4">
                         <div className="flex border-b border-gray-600">
                           <button
