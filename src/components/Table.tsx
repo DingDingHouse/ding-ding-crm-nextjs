@@ -21,6 +21,8 @@ import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
 import { useAppDispatch } from '@/utils/hooks'
 import { setDragedData } from '@/redux/gameorder/gameorderSlice'
+import { ChangeGamesOrder } from '@/utils/action'
+import Loader from '@/utils/Load'
 
 
 
@@ -31,6 +33,8 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
     const [range, setRange] = useState({ From: '', To: '' });
     const [openRange, setOpenRange] = useState(false)
     const [roles, setRoles] = useState<any>([])
+    const [loading, setLoading] = useState(false);
+
     interface TableDataItem {
         _id: string;
         order?: number;
@@ -39,16 +43,26 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
 
     const [tabledata, setTableData] = useState<TableDataItem[]>([])
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const [orderInputs, setOrderInputs] = useState<{ [key: string]: number }>({});
+
     const router = useRouter();
     const dispatch = useAppDispatch();
     const pathname = usePathname();
+
+    const platform = pathname.match(/game\/([^/]+)/)?.[1] || '';
+
     const handleOpen = (index: any) => {
         setOpenIndex((prevIndex) => (prevIndex === index ? null : index)); // Toggle the dropdown for the clicked index
     };
 
     useEffect(() => {
         if (data?.length > 0) {
-            setTableData(data)
+            setTableData(data);
+            const initialOrderInputs = data.reduce((acc: any, item: any, index: number) => {
+                acc[item._id] = index + 1;
+                return acc;
+            }, {});
+            setOrderInputs(initialOrderInputs);
         }
     }, [data])
 
@@ -123,43 +137,70 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
 
 
     //Games Order Chaning Logic 
-    const handleDragStart = (index: number) => {
-        setDraggedIndex(index);
+
+    const handleOrderChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+        const { value } = e.target;
+        setOrderInputs((prev) => ({ ...prev, [id]: parseInt(value) }));
     };
 
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
-    };
+    const handelChangeOrder = async (dragedData: any) => {
+        setLoading(true);
+        console.log("CURRENT PAGE ; ", platform)
 
-    const handleDrop = (dropIndex: number) => {
-        if (page !== 'game') return;
-    
-        if (draggedIndex !== null) {
-            const draggedItem = tabledata[draggedIndex];
-            const updatedTableData = [...tabledata];
-    
-            updatedTableData.splice(draggedIndex, 1);
-    
-            updatedTableData.splice(dropIndex, 0, draggedItem);
-    
-            const newTableData = updatedTableData.map((item, index) => ({
-                ...item,
-                order: index + 1
-            }));
-    
-            setTableData(newTableData);
-    
-            const changedItems = newTableData.filter((item, index) => {
-                return data[index]?._id !== item._id || data[index]?.order !== item.order;
-            });
-    
-            if (changedItems.length > 0) {
-                dispatch(setDragedData(changedItems));
+        const formattedData = {
+            gameOrders: dragedData.map((game: any) => ({
+                gameId: game._id,
+                order: game.order
+            })),
+            platformName: platform
+        };
+
+        try {
+            const response = await ChangeGamesOrder(formattedData);
+            if (response.data?.message) {
+                toast.success(response.data?.message);
             } else {
-                dispatch(setDragedData([]));
+                toast.error(response.error || "An unexpected error occurred");
             }
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(error.message || "An error occurred");
+            } else {
+                toast.error("An error occurred");
+            }
+            console.log(error);
+        } finally {
+            setLoading(false);
+            dispatch(setDragedData([]));
         }
     };
+
+    const handleReorder = async () => {
+        const newOrder = Object.entries(orderInputs).map(([id, order]) => ({
+            _id: id,
+            order,
+        }));
+
+        // Create a map of the new order
+        const orderMap = new Map(newOrder.map(item => [item._id, item.order]));
+
+        // Update the order of all items and sort them
+        const sortedData = [...tabledata]
+            .map(item => ({
+                ...item,
+                order: orderMap.get(item._id) || item.order,
+            }))
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+            .map((item, index) => ({
+                ...item,
+                order: index + 1,
+            }));
+
+        setTableData(sortedData);
+        dispatch(setDragedData(sortedData));
+        await handelChangeOrder(sortedData); // Call the API function
+    };
+
 
     return (
         <>
@@ -167,6 +208,8 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                 <table className="w-full text-sm text-left rtl:text-right rounded text-gray-500 dark:text-gray-400">
                     <thead className="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
+                            {page === 'game' && <th scope="col" className="px-6 py-3 text-left">Order</th>}
+
                             {
                                 tableData.Thead.map((th: any) => (
                                     <th key={th} scope="col" className="px-6 py-3  text-left">
@@ -180,8 +223,6 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                                                 </div>
                                             </div>}
                                         </div>
-
-
                                     </th>
                                 ))
                             }
@@ -191,13 +232,23 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                         {tabledata?.length > 0 ? (
                             tabledata?.map((item: any, ind: number) => (
                                 <tr
-                                    draggable={page === 'game'}
-                                    onDragStart={() => handleDragStart(ind)}
-                                    onDragOver={handleDragOver}
-                                    onDrop={() => handleDrop(ind)}
+
                                     key={item?._id}
                                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                 >
+                                    {page === 'game' && (
+                                        <td className="px-6 py-4 whitespace-nowrap text-base">
+                                            <input
+                                                type="number"
+                                                value={orderInputs[item._id] || ''}
+                                                onChange={(e) => handleOrderChange(e, item._id)}
+                                                className="p-3 rounded-lg bg-gray-100 dark:bg-gray-700 outline-none dark:text-white placeholder:text-gray-500 focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out w-24"
+                                                placeholder="Enter order"
+                                            />
+                                        </td>
+                                    )}
+
+
                                     {tableData?.Tbody?.map((td: any) => {
                                         let tdClass = "px-6 py-4 whitespace-nowrap text-base ";
 
@@ -267,6 +318,18 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                 </table>
                 {/* Pagination */}
             </div>
+            {loading && <Loader />}
+
+            {
+                page === "game" && <button
+                    onClick={handleReorder}
+                    className="fixed bottom-10 right-10 z-50 mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                >
+                    Update Order
+                </button>
+            }
+
+
             {page !== 'game' && !popup?.includes(paginationData?.totalPage) && <Pagination paginationData={paginationData} />}
             {openIndex !== null && <div onClick={() => handleOpen(null)} className='bg-black fixed top-0 bg-opacity-35 left-0 w-full h-screen z-[50]'></div>}
             {openmodal && <Modal closeModal={handelCloseModal} modaltype={modalType} >{ModalContent}</Modal>}

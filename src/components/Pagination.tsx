@@ -9,7 +9,7 @@ const Pagination = ({ paginationData }: any) => {
     const pathname = usePathname();
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState<any>(1);
-    const [isInitialRender, setIsInitialRender] = useState(true); 
+    const [isInitialRender, setIsInitialRender] = useState(true);
     const sort = useAppSelector((state) => state?.globlestate?.isDataSorting)
     // Function to handle previous page
     const handlePrev = () => {
@@ -29,27 +29,27 @@ const Pagination = ({ paginationData }: any) => {
         if (isInitialRender) {
             setIsInitialRender(false);
             return;
-        }else {
+        } else {
             const queryParams = new URLSearchParams();
 
             queryParams.set('page', currentPage);
-            queryParams.set('sort', sort?'desc':'asc');
-    
+            queryParams.set('sort', sort ? 'desc' : 'asc');
+
             if (paginationData?.search) queryParams.set('search', paginationData.search);
             if (paginationData?.From) queryParams.set('From', paginationData.From);
             if (paginationData?.To) queryParams.set('To', paginationData.To);
-    
+
             const queryString = queryParams.toString();
             const newUrl = `${pathname}?${queryString}`;
-    
+
             router?.replace(newUrl);
         }
-       
-    }, [currentPage,sort]);
+
+    }, [currentPage, sort]);
 
     useEffect(() => {
         setCurrentPage(paginationData?.currentPage)
-    },[paginationData?.currentPage])
+    }, [paginationData?.currentPage])
 
     return (
         <div className='flex justify-end dark:text-white text-gray-600 pt-3 pb-4 pr-2'>

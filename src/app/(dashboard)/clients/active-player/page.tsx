@@ -11,8 +11,11 @@ import Filter from "@/components/svg/Filter";
 import { StatsCard } from "@/components/modals/StatsCard";
 import { TimeDisplay } from "@/components/modals/TimeDisplay";
 import { SessionSpinChart } from "@/components/SessionSpinChart";
+import SpinDataTable from "@/components/SpinDataTable";
 
 export default function ActiveUsers() {
+  const [viewType, setViewType] = useState('chart');
+
   const activeUsers = useAppSelector((state) => state.activeUsers.users);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -26,6 +29,11 @@ export default function ActiveUsers() {
   const filteredUsers = Object.entries(activeUsers).filter(([playerId]) =>
     playerId.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleViewChange = (type: string) => {
+    setViewType(type)
+  }
+
 
   useEffect(() => {
     if (selectedUser?.currentGame?.entryTime) {
@@ -67,7 +75,6 @@ export default function ActiveUsers() {
     setSessionData([]);
   };
 
-  console.log("selectedUser", selectedUser);
 
   return (
     <div className="py-2 min-h-screen ">
@@ -164,7 +171,7 @@ export default function ActiveUsers() {
                   />
                   <StatsCard
                     label="Credits at Entry"
-                    value={selectedUser?.currentGame?.creditsAtEntry || ""}
+                    value={selectedUser?.currentGame?.creditsAtEntry.toFixed(3) || ""}
                   />
                   <StatsCard
                     label="Total Spins"
@@ -188,25 +195,54 @@ export default function ActiveUsers() {
                   />
                   <StatsCard
                     label="Total Bet Amount"
-                    value={selectedUser?.currentGame?.totalBetAmount || 0}
+                    value={selectedUser?.currentGame?.totalBetAmount.toFixed(3) || 0}
                   />
                   <StatsCard
                     label="Total Win Amount"
-                    value={selectedUser?.currentGame?.totalWinAmount || 0}
+                    value={selectedUser?.currentGame?.totalWinAmount.toFixed(3) || 0}
                   />
                   <StatsCard
                     label="Credits at Exit"
-                    value={selectedUser?.currentGame?.creditsAtExit || ""}
+                    value={selectedUser?.currentGame?.creditsAtExit.toFixed(3) || ""}
                   />
                 </div>
 
                 {selectedUser?.currentGame?.spinData &&
                   selectedUser?.currentGame?.spinData.length > 0 && (
-                    <div>
-                      <SessionSpinChart
-                        spinData={selectedUser?.currentGame?.spinData || []}
-                      />
-                    </div>
+                    <>
+                      <div className="mt-4">
+                        <div className="flex border-b border-gray-600">
+                          <button
+                            className={`py-2 px-4 ${viewType === "chart"
+                              ? "border-b-2 border-blue-500 text-blue-500"
+                              : "text-gray-400 hover:text-white"
+                              }`}
+                            onClick={() => handleViewChange("chart")}
+                          >
+                            Chart View
+                          </button>
+                          <button
+                            className={`py-2 px-4 ${viewType === "raw"
+                              ? "border-b-2 border-blue-500 text-blue-500"
+                              : "text-gray-400 hover:text-white"
+                              }`}
+                            onClick={() => handleViewChange("raw")}
+                          >
+                            Raw Data
+                          </button>
+                        </div>
+                        <div className="mt-4">
+                          {viewType === "chart" ? (
+                            <SessionSpinChart spinData={selectedUser?.currentGame?.spinData || []} />
+                          ) : (
+                            <SpinDataTable spinData={selectedUser?.currentGame?.spinData || []} />
+                          )}
+                        </div>
+                      </div>
+
+                    </>
+
+
                   )}
               </div>
             ) : (

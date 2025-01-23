@@ -8,9 +8,13 @@ import { SessionSpinChart } from "../SessionSpinChart";
 import { TimeDisplay } from "./TimeDisplay";
 import { StatsCard } from "./StatsCard";
 import { WinPercentageChart } from "../WinPercentageChart";
+import SpinDataItem from "../SpinDataItem";
+import SpinDataTable from "../SpinDataTable";
 
 
 const PlayerGameHistory = ({ username }: { username: string }) => {
+    const [viewType, setViewType] = useState('chart');
+
     const [sessionData, setSessionData] = useState<any[]>([]);
     const [daterange, setDaterange] = useState<any>({
         startDate: "",
@@ -23,6 +27,10 @@ const PlayerGameHistory = ({ username }: { username: string }) => {
     const [exceldata, setExceldata] = useState<any[]>([]);
     const [load, setLoad] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const handleViewChange = (type: string) => {
+        setViewType(type)
+    }
 
     function formatDate(date: any) {
         const year = date.getFullYear();
@@ -65,8 +73,6 @@ const PlayerGameHistory = ({ username }: { username: string }) => {
             if (error) {
                 throw new Error(error);
             }
-
-            console.log("PLAYER GAME HISTORY", data);
 
             setSessionData(data.sessionData);
             setPagination(data.pagination);
@@ -264,6 +270,7 @@ const PlayerGameHistory = ({ username }: { username: string }) => {
                 </div>
             </div>
 
+
             <div className="space-y-2 overflow-y-auto  pr-4 custom-scrollbar">
                 {load ? (
                     <div className="fixed zindex top-0 left-0 w-full h-full">
@@ -305,7 +312,7 @@ const PlayerGameHistory = ({ username }: { username: string }) => {
                                             const averageWinPercentage = gameSession.spinData.length > 0 ? totalWinPercentage / gameSession.spinData.length : 0;
 
                                             return (
-                                                <div className=" bg-slate-700  p-4 rounded-lg flex flex-col gap-4">
+                                                <div className=" bg-slate-700  p-4 rounded-lg flex flex-col gap-4 mb-4">
                                                     <div className="grid grid-cols-1 p-4">
                                                         <h3 className="text-white text-xl font-bold"> #{index + 1}</h3>
                                                     </div>
@@ -339,8 +346,36 @@ const PlayerGameHistory = ({ username }: { username: string }) => {
                                                         />
                                                     </div>
 
-                                                    <div>
-                                                        <SessionSpinChart spinData={gameSession.spinData} />
+                                                 
+
+                                                    <div className="mt-4">
+                                                        <div className="flex border-b border-gray-600">
+                                                            <button
+                                                                className={`py-2 px-4 ${viewType === "chart"
+                                                                    ? "border-b-2 border-blue-500 text-blue-500"
+                                                                    : "text-gray-400 hover:text-white"
+                                                                    }`}
+                                                                onClick={() => handleViewChange("chart")}
+                                                            >
+                                                                Chart View
+                                                            </button>
+                                                            <button
+                                                                className={`py-2 px-4 ${viewType === "raw"
+                                                                    ? "border-b-2 border-blue-500 text-blue-500"
+                                                                    : "text-gray-400 hover:text-white"
+                                                                    }`}
+                                                                onClick={() => handleViewChange("raw")}
+                                                            >
+                                                                Raw Data
+                                                            </button>
+                                                        </div>
+                                                        <div className="mt-4">
+                                                            {viewType === "chart" ? (
+                                                                <SessionSpinChart spinData={gameSession.spinData} />
+                                                            ) : (
+                                                                <SpinDataTable spinData={gameSession.spinData} />
+                                                            )}
+                                                        </div>
                                                     </div>
 
                                                 </div>

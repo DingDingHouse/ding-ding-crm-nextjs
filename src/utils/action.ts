@@ -607,7 +607,7 @@ export const GetAllClients = async (search: string, page: number, query?: any, s
 
     }
     const response = await fetch(
-      `${config.server}/api/users/all?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort}`,
+      `${config.server}/api/users/all?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort || 'desc'}`,
       {
         method: "GET",
         credentials: "include",
@@ -639,7 +639,7 @@ export const GetMyClients = async (search: string, page: number, query?: any, so
     }
 
     const response = await fetch(
-      `${config.server}/api/users/subordinates?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort}`,
+      `${config.server}/api/users/subordinates?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort || 'desc'}`,
       {
         method: "GET",
         credentials: "include",
@@ -671,7 +671,7 @@ export const GetMyTransactions = async (search: string, page: number, query?: an
   }
   try {
     const response = await fetch(
-      `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort}&type=${type || ''}`,
+      `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort || 'desc'}&type=${type || ''}`,
       {
         method: "GET",
         credentials: "include",
@@ -703,7 +703,7 @@ export const GetAllTransactions = async (search: string, page: number, query?: a
   }
   try {
     const response = await fetch(
-      `${config.server}/api/transactions/all?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort}`,
+      `${config.server}/api/transactions/all?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort || 'desc'}`,
       {
         method: "GET",
         credentials: "include",
@@ -786,6 +786,7 @@ export const ChangeGamesOrder = async (games: any) => {
       throw new Error(error.message || 'Failed to fetch game history');
     }
     const data = await response.json();
+    revalidatePath("/game/*");
     return { data };
   } catch (error) {
     return {
