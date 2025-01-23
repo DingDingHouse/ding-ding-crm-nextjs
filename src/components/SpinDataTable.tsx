@@ -1,5 +1,5 @@
 import type React from "react"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useRef, useEffect } from "react"
 import { ChevronUp, ChevronDown } from "lucide-react"
 
 interface SpinData {
@@ -19,7 +19,9 @@ interface SpinDataTableProps {
 
 const SpinDataTable: React.FC<SpinDataTableProps> = ({ spinData }) => {
     const [sortColumn, setSortColumn] = useState<keyof SpinData | "spinCount">("spinCount")
-    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
+    const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+    const tableRef = useRef<HTMLDivElement>(null);
+
 
     const handleSort = (column: keyof SpinData | "spinCount") => {
         if (column === sortColumn) {
@@ -46,9 +48,15 @@ const SpinDataTable: React.FC<SpinDataTableProps> = ({ spinData }) => {
         return sortDirection === "asc" ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
     }
 
+    useEffect(() => {
+        if (tableRef.current) {
+            tableRef.current.scrollTop = tableRef.current.scrollHeight;
+        }
+    }, [spinData]);
+
     return (
-        <div className="overflow-x-auto bg-gray-900 rounded-lg shadow-lg">
-            <table className="min-w-full">
+        <div ref={tableRef} className="overflow-y-auto max-h-96">
+            <table className="min-w-full divide-y divide-gray-700">
                 <thead>
                     <tr className="bg-gray-800 text-gray-300 text-sm uppercase">
                         {[
@@ -70,7 +78,7 @@ const SpinDataTable: React.FC<SpinDataTableProps> = ({ spinData }) => {
                         ))}
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-700">
+                <tbody className="bg-gray-800 divide-y divide-gray-700">
                     {sortedData.map((spin, index) => (
                         <tr
                             key={spin.spinId}
