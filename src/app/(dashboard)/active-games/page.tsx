@@ -151,7 +151,7 @@ export default function GameCategorizedUsers() {
                             <h3 className="text-xl font-semibold mb-4 text-gray-600 dark:text-white">
                                 {selectedGame?.gameName} - Players
                             </h3>
-                            <ul className="space-y-4">{selectedGame?.players.map(renderPlayerCard)}</ul>
+                            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">{selectedGame?.players.map(renderPlayerCard)}</ul>
                         </div>
                     ) : filteredGames.length > 0 ? (
                         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">{filteredGames.map(renderGameCard)}</ul>
