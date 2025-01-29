@@ -113,9 +113,14 @@ export default function GameCategorizedUsers() {
                 Credits: <span className="text-green-500">{player.currentCredits}</span>
             </div>
             <div className="mt-1 text-sm text-gray-500 tracking-wide dark:text-gray-300">
+                Credits at Entry :
+                <span className="text-gray-400 dark:text-[#FFD117]"> {player.initialCredits}</span>
+            </div>
+            <div className="mt-1 text-sm text-gray-500 tracking-wide dark:text-gray-300">
                 Entry Time:{" "}
                 <span className="text-gray-400 dark:text-[#FFD117]">{formatDate(player.entryTime?.toISOString() || null)}</span>
             </div>
+
         </li>
     )
 
@@ -149,7 +154,7 @@ export default function GameCategorizedUsers() {
                             <ul className="space-y-4">{selectedGame?.players.map(renderPlayerCard)}</ul>
                         </div>
                     ) : filteredGames.length > 0 ? (
-                        <ul className="space-y-4">{filteredGames.map(renderGameCard)}</ul>
+                        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">{filteredGames.map(renderGameCard)}</ul>
                     ) : (
                         <div className="text-center py-8 text-gray-400">No games found</div>
                     )}
@@ -169,12 +174,11 @@ export default function GameCategorizedUsers() {
                                         label="Credits at Entry"
                                         value={selectedUser.currentGame.creditsAtEntry.toFixed(3) || ""}
                                     />
-                                    <StatsCard label="Total Spins" value={selectedUser.currentGame.totalSpins || ""} />
+                                    <StatsCard label="Current Credits" value={selectedUser.currentCredits || ""} />
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                                     <TimeDisplay label="Entry Time" timestamp={selectedUser.currentGame.entryTime + ""} />
-                                    <TimeDisplay label="Exit Time" timestamp={selectedUser.currentGame.exitTime + ""} />
                                     <StatsCard
                                         label="Total Bet Amount"
                                         value={selectedUser.currentGame.totalBetAmount.toFixed(3) || "0"}
@@ -184,6 +188,8 @@ export default function GameCategorizedUsers() {
                                         value={selectedUser.currentGame.totalWinAmount.toFixed(3) || "0"}
                                     />
                                     <StatsCard label="Credits at Exit" value={selectedUser.currentGame.creditsAtExit.toFixed(3) || ""} />
+                                    <StatsCard label="Total Spins" value={selectedUser.currentGame.totalSpins || ""} />
+
                                 </div>
 
                                 {selectedUser.currentGame.spinData && selectedUser.currentGame.spinData.length > 0 && (
