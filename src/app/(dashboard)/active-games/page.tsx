@@ -110,7 +110,7 @@ export default function GameCategorizedUsers() {
                 </div>
             </div>
             <div className="mt-1 text-sm text-gray-500 tracking-wide dark:text-gray-300">
-                Credits: <span className="text-green-500">{player.currentCredits}</span>
+                Current Credits: <span className="text-green-500">{player.currentCredits}</span>
             </div>
             <div className="mt-1 text-sm text-gray-500 tracking-wide dark:text-gray-300">
                 Credits at Entry :
