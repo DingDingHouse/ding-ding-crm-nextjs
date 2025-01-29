@@ -4,10 +4,7 @@ import { formatDate } from "@/utils/common";
 import { useState, useEffect } from "react";
 import Modal from "@/components/Modal";
 import { useSocket } from "@/socket/SocketProvider";
-import History from "@/components/svg/History";
 import Delete from "@/components/svg/Delete";
-import Close from "@/components/svg/Close";
-import Filter from "@/components/svg/Filter";
 import { StatsCard } from "@/components/modals/StatsCard";
 import { TimeDisplay } from "@/components/modals/TimeDisplay";
 import { SessionSpinChart } from "@/components/SessionSpinChart";
@@ -19,13 +16,9 @@ export default function ActiveUsers() {
   const activeUsers = useAppSelector((state) => state.activeUsers.users);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [sessionDuration, setSessionDuration] = useState(0);
   const [showModal, setShowModal] = useState("");
   const { socket } = useSocket();
   const selectedUser = selectedUserId ? activeUsers[selectedUserId] : null;
-  const [sessionData, setSessionData] = useState<any[]>([]);
-  const [entryDate, setEntryDate] = useState<string>("");
-  const [showFilter, setShowFilter] = useState(false);
   const filteredUsers = Object.entries(activeUsers).filter(([playerId]) =>
     playerId.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -35,21 +28,8 @@ export default function ActiveUsers() {
   }
 
 
-  useEffect(() => {
-    if (selectedUser?.currentGame?.entryTime) {
-      const entryTime = new Date(selectedUser.currentGame.entryTime).getTime();
-      const updateSessionDuration = () => {
-        const currentTime = new Date().getTime();
-        setSessionDuration(Math.floor((currentTime - entryTime) / 1000));
-      };
-      const intervalId = setInterval(updateSessionDuration, 1000);
-      return () => clearInterval(intervalId);
-    }
-  }, [selectedUser]);
-
   const closeModal = () => {
     setSelectedUserId(null);
-    setSessionDuration(0);
   };
 
   const toggleUserStatus = (username: string) => {
@@ -69,10 +49,6 @@ export default function ActiveUsers() {
         }
       }
     );
-  };
-
-  const handelCloseSession = () => {
-    setSessionData([]);
   };
 
 
