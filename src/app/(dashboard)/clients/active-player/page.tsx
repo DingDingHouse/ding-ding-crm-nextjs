@@ -107,10 +107,14 @@ export default function ActiveUsers() {
                     </div>
                   </div>
                   <div className="mt-1 text-sm text-gray-500 tracking-wide dark:text-gray-300">
-                    Credits :{" "}
+                    Current Credits :{" "}
                     <span className="text-green-500">
                       {playerData.currentCredits}
                     </span>
+                  </div>
+                  <div className="mt-1 text-sm text-gray-500 tracking-wide dark:text-gray-300">
+                    Credits at Entry :
+                    <span className="text-gray-400 dark:text-[#FFD117]"> {playerData.initialCredits}</span>
                   </div>
                   <div className="mt-1 text-sm text-gray-500 tracking-wide dark:text-gray-300">
                     Entry Time :{" "}
@@ -149,10 +153,7 @@ export default function ActiveUsers() {
                     label="Credits at Entry"
                     value={selectedUser?.currentGame?.creditsAtEntry.toFixed(3) || ""}
                   />
-                  <StatsCard
-                    label="Total Spins"
-                    value={selectedUser?.currentGame?.totalSpins || ""}
-                  />
+                  <StatsCard label="Current Credits" value={selectedUser.currentCredits.toFixed(3) || ""} />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -160,13 +161,6 @@ export default function ActiveUsers() {
                     label="Entry Time"
                     timestamp={
                       selectedUser?.currentGame?.entryTime + ""
-                    }
-                  />
-
-                  <TimeDisplay
-                    label="Exit Time"
-                    timestamp={
-                      selectedUser?.currentGame?.exitTime + ""
                     }
                   />
                   <StatsCard
@@ -180,6 +174,10 @@ export default function ActiveUsers() {
                   <StatsCard
                     label="Credits at Exit"
                     value={selectedUser?.currentGame?.creditsAtExit.toFixed(3) || ""}
+                  />
+                  <StatsCard
+                    label="Total Spins"
+                    value={selectedUser?.currentGame?.totalSpins || ""}
                   />
                 </div>
 
