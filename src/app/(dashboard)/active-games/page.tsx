@@ -174,7 +174,7 @@ export default function GameCategorizedUsers() {
                                         label="Credits at Entry"
                                         value={selectedUser.currentGame.creditsAtEntry.toFixed(3) || ""}
                                     />
-                                    <StatsCard label="Current Credits" value={selectedUser.currentCredits || ""} />
+                                    <StatsCard label="Current Credits" value={selectedUser.currentCredits.toFixed(3) || ""} />
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
