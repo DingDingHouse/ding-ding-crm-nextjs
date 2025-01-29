@@ -151,7 +151,7 @@ export default function GameCategorizedUsers() {
                             <h3 className="text-xl font-semibold mb-4 text-gray-600 dark:text-white">
                                 {selectedGame?.gameName} - Players
                             </h3>
-                            <ul className="space-y-4">{selectedGame?.players.map(renderPlayerCard)}</ul>
+                            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">{selectedGame?.players.map(renderPlayerCard)}</ul>
                         </div>
                     ) : filteredGames.length > 0 ? (
                         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">{filteredGames.map(renderGameCard)}</ul>
@@ -174,7 +174,7 @@ export default function GameCategorizedUsers() {
                                         label="Credits at Entry"
                                         value={selectedUser.currentGame.creditsAtEntry.toFixed(3) || ""}
                                     />
-                                    <StatsCard label="Current Credits" value={selectedUser.currentCredits || ""} />
+                                    <StatsCard label="Current Credits" value={selectedUser.currentCredits.toFixed(3) || ""} />
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
