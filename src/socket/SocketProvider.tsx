@@ -186,7 +186,7 @@ export const SocketProvider: React.FC<{
 
   const handleExitedGame = (payload: any) => {
     const { playerId } = payload;
-    dispatch(exitGame({ playerId }));
+    dispatch(exitGame({ playerId, gameId: payload.gameId }));
   };
 
   const handleUpdatedSpin = (summary: CurrentGame) => {

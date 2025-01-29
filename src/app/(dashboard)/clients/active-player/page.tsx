@@ -4,10 +4,7 @@ import { formatDate } from "@/utils/common";
 import { useState, useEffect } from "react";
 import Modal from "@/components/Modal";
 import { useSocket } from "@/socket/SocketProvider";
-import History from "@/components/svg/History";
 import Delete from "@/components/svg/Delete";
-import Close from "@/components/svg/Close";
-import Filter from "@/components/svg/Filter";
 import { StatsCard } from "@/components/modals/StatsCard";
 import { TimeDisplay } from "@/components/modals/TimeDisplay";
 import { SessionSpinChart } from "@/components/SessionSpinChart";
@@ -19,13 +16,9 @@ export default function ActiveUsers() {
   const activeUsers = useAppSelector((state) => state.activeUsers.users);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [sessionDuration, setSessionDuration] = useState(0);
   const [showModal, setShowModal] = useState("");
   const { socket } = useSocket();
   const selectedUser = selectedUserId ? activeUsers[selectedUserId] : null;
-  const [sessionData, setSessionData] = useState<any[]>([]);
-  const [entryDate, setEntryDate] = useState<string>("");
-  const [showFilter, setShowFilter] = useState(false);
   const filteredUsers = Object.entries(activeUsers).filter(([playerId]) =>
     playerId.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -35,21 +28,8 @@ export default function ActiveUsers() {
   }
 
 
-  useEffect(() => {
-    if (selectedUser?.currentGame?.entryTime) {
-      const entryTime = new Date(selectedUser.currentGame.entryTime).getTime();
-      const updateSessionDuration = () => {
-        const currentTime = new Date().getTime();
-        setSessionDuration(Math.floor((currentTime - entryTime) / 1000));
-      };
-      const intervalId = setInterval(updateSessionDuration, 1000);
-      return () => clearInterval(intervalId);
-    }
-  }, [selectedUser]);
-
   const closeModal = () => {
     setSelectedUserId(null);
-    setSessionDuration(0);
   };
 
   const toggleUserStatus = (username: string) => {
@@ -69,10 +49,6 @@ export default function ActiveUsers() {
         }
       }
     );
-  };
-
-  const handelCloseSession = () => {
-    setSessionData([]);
   };
 
 
@@ -95,7 +71,7 @@ export default function ActiveUsers() {
         </div>
         <div className="p-2 space-y-3">
           {filteredUsers?.length > 0 ? (
-            <ul className="space-y-4">
+            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredUsers?.map(([playerId, playerData]) => (
                 <li
                   key={playerId}
@@ -131,10 +107,14 @@ export default function ActiveUsers() {
                     </div>
                   </div>
                   <div className="mt-1 text-sm text-gray-500 tracking-wide dark:text-gray-300">
-                    Credits :{" "}
+                    Current Credits :{" "}
                     <span className="text-green-500">
                       {playerData.currentCredits}
                     </span>
+                  </div>
+                  <div className="mt-1 text-sm text-gray-500 tracking-wide dark:text-gray-300">
+                    Credits at Entry :
+                    <span className="text-gray-400 dark:text-[#FFD117]"> {playerData.initialCredits}</span>
                   </div>
                   <div className="mt-1 text-sm text-gray-500 tracking-wide dark:text-gray-300">
                     Entry Time :{" "}
@@ -173,10 +153,7 @@ export default function ActiveUsers() {
                     label="Credits at Entry"
                     value={selectedUser?.currentGame?.creditsAtEntry.toFixed(3) || ""}
                   />
-                  <StatsCard
-                    label="Total Spins"
-                    value={selectedUser?.currentGame?.totalSpins || ""}
-                  />
+                  <StatsCard label="Current Credits" value={selectedUser.currentCredits.toFixed(3) || ""} />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -184,13 +161,6 @@ export default function ActiveUsers() {
                     label="Entry Time"
                     timestamp={
                       selectedUser?.currentGame?.entryTime + ""
-                    }
-                  />
-
-                  <TimeDisplay
-                    label="Exit Time"
-                    timestamp={
-                      selectedUser?.currentGame?.exitTime + ""
                     }
                   />
                   <StatsCard
@@ -204,6 +174,10 @@ export default function ActiveUsers() {
                   <StatsCard
                     label="Credits at Exit"
                     value={selectedUser?.currentGame?.creditsAtExit.toFixed(3) || ""}
+                  />
+                  <StatsCard
+                    label="Total Spins"
+                    value={selectedUser?.currentGame?.totalSpins || ""}
                   />
                 </div>
 
