@@ -68,7 +68,9 @@ const Dashboard = ({ subordinates_id, userDetail }: any) => {
         },
         {
             title: 'Clients',
-            amount: data?.users ? Object?.values(data?.users)?.reduce((acc: any, value: any) => acc + value, 0) : 0,
+            amount: data?.users ? Object.entries(data.users)
+                .filter(([key]) => key !== 'player')
+                .reduce((acc, [_, value]) => acc + (value as number), 0) : 0,
             icon: <Clients />
         },
         {
@@ -106,6 +108,7 @@ const Dashboard = ({ subordinates_id, userDetail }: any) => {
             if (user) {
                 const userid: any = jwt.decode(user)
                 const response = await getUserReport(subordinates_id ? subordinates_id : userid?.id, reporttype);
+                console.log(response)
                 setLoading(false);
                 if (response?.error) {
                     return toast.error(response.error);
