@@ -596,38 +596,7 @@ export const UpdateMaintenance = async (availableAt: string) => {
 };
 
 
-export const GetAllClients = async (search: string, page: number, query?: any, sort?: string) => {
-  const token = await getCookie();
-  try {
-    let filterQuery = '';
-    if (query) {
-      if (query?.credits?.From > 0 && query?.credits?.To > 0) {
-        filterQuery = JSON.stringify(query);
-      }
-
-    }
-    const response = await fetch(
-      `${config.server}/api/users/all?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort || 'desc'}`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `userToken=${token}`,
-        },
-      }
-    );
-    if (!response.ok) {
-      const error = await response.json();
-      return { error: error.message };
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-  }
-};
-
-export const GetMyClients = async (search: string, page: number, query?: any, sort?: string) => {
+export const GetAllClients = async (search: string, page: number, query?: any, sort?: string, startDate?: string, endDate?: string) => {
   const token = await getCookie();
   try {
     let filterQuery = '';
@@ -638,8 +607,12 @@ export const GetMyClients = async (search: string, page: number, query?: any, so
 
     }
 
+
+    // Add date range parameters to URL if provided
+    const dateParams = startDate && endDate ? `&startDate=${startDate}&endDate=${endDate}` : '';
+
     const response = await fetch(
-      `${config.server}/api/users/subordinates?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort || 'desc'}`,
+      `${config.server}/api/users/all?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort}${dateParams}`,
       {
         method: "GET",
         credentials: "include",
@@ -659,19 +632,21 @@ export const GetMyClients = async (search: string, page: number, query?: any, so
   }
 };
 
-export const GetMyTransactions = async (search: string, page: number, query?: any, sort?: string, type?: string) => {
+export const GetMyClients = async (search: string, page: number, query?: any, sort?: string, startDate?: string, endDate?: string) => {
   const token = await getCookie();
-  let filterQuery = "{}";
-  let username = "";
-  if (query) {
-    filterQuery = JSON.stringify(query);
-  }
-  if (search) {
-    username = search;
-  }
   try {
+    let filterQuery = '';
+    if (query) {
+      if (query?.credits?.From > 0 && query?.credits?.To > 0) {
+        filterQuery = JSON.stringify(query);
+      }
+    }
+
+    // Add date range parameters to URL if provided
+    const dateParams = startDate && endDate ? `&startDate=${startDate}&endDate=${endDate}` : '';
+
     const response = await fetch(
-      `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort || 'desc'}&type=${type || ''}`,
+      `${config.server}/api/users/subordinates?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort}${dateParams}`,
       {
         method: "GET",
         credentials: "include",
@@ -691,7 +666,7 @@ export const GetMyTransactions = async (search: string, page: number, query?: an
   }
 };
 
-export const GetAllTransactions = async (search: string, page: number, query?: any, sort?: string) => {
+export const GetMyTransactions = async (search: string, page: number, query?: any, sort?: string, type?: string, startDate?: string, endDate?: string) => {
   const token = await getCookie();
   let filterQuery = "{}";
   let username = "";
@@ -701,9 +676,49 @@ export const GetAllTransactions = async (search: string, page: number, query?: a
   if (search) {
     username = search;
   }
+
+  // Add date range parameters to URL if provided
+  const dateParams = startDate && endDate ? `&startDate=${startDate}&endDate=${endDate}` : '';
+
   try {
     const response = await fetch(
-      `${config.server}/api/transactions/all?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort || 'desc'}`,
+      `${config.server}/api/transactions?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort || 'desc'}&type=${type || ''}${dateParams}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `userToken=${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const error = await response.json();
+      return { error: error.message };
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+  }
+};
+
+export const GetAllTransactions = async (search: string, page: number, query?: any, sort?: string, startDate?: string, endDate?: string) => {
+  const token = await getCookie();
+  let filterQuery = "{}";
+  let username = "";
+  if (query) {
+    filterQuery = JSON.stringify(query);
+  }
+  if (search) {
+    username = search;
+  }
+
+  // Add date range parameters to URL if provided
+  const dateParams = startDate && endDate ? `&startDate=${startDate}&endDate=${endDate}` : '';
+
+  try {
+    const response = await fetch(
+      `${config.server}/api/transactions/all?filter=${username}&page=${page}&search=${filterQuery}&sort=${sort}${dateParams}`,
       {
         method: "GET",
         credentials: "include",
@@ -769,6 +784,7 @@ export const getGameHistory = async (startDate: string, endDate: string, playerI
   }
 };
 
+
 export const ChangeGamesOrder = async (games: any) => {
   try {
     const token = await getCookie();
@@ -795,6 +811,3 @@ export const ChangeGamesOrder = async (games: any) => {
     }
   }
 };
-
-
-
