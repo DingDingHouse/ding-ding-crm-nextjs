@@ -38,6 +38,7 @@ const Pagination = ({ paginationData }: any) => {
             if (paginationData?.search) queryParams.set('search', paginationData.search);
             if (paginationData?.From) queryParams.set('From', paginationData.From);
             if (paginationData?.To) queryParams.set('To', paginationData.To);
+            if (paginationData?.role) queryParams.set('role', paginationData.role);
 
             // Set date range params
             if (paginationData?.startDate) queryParams.set('startDate', paginationData.startDate)

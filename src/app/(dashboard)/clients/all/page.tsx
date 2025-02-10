@@ -10,7 +10,8 @@ const page = async ({ searchParams }: any) => {
         }
     }
     const clients = await GetAllClients((searchParams?.search || ''), (searchParams?.page || 1), query, searchParams?.sort || 'desc', searchParams?.startDate,
-        searchParams?.endDate)
+        searchParams?.endDate, searchParams?.role)
+
 
     const tableData = {
         Thead: ['username', 'status', 'role', 'redeem', 'recharge', 'credits', 'action'],
@@ -24,7 +25,7 @@ const page = async ({ searchParams }: any) => {
             </div>
             <Table paginationData={{
                 currentPage: clients?.currentPage, totalPage: clients?.totalPages, search: searchParams?.search, From: searchParams?.From, To: searchParams?.To, sort: searchParams?.sort, startDate: searchParams?.startDate,
-                endDate: searchParams?.endDate
+                endDate: searchParams?.endDate, role: searchParams?.role
             }} data={clients?.subordinates} tableData={tableData} />
         </div>
     )

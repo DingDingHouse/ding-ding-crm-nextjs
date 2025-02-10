@@ -9,6 +9,11 @@ import toast from 'react-hot-toast'
 import Loader from '@/utils/Load'
 import { ChangeGamesOrder } from '@/utils/action'
 import Order from './svg/Order'
+import { rolesHierarchy } from '@/utils/common'
+import Cookies from 'js-cookie'
+import jwt from 'jsonwebtoken'
+
+
 
 
 
@@ -19,7 +24,11 @@ const Search = ({ page, platform }: any) => {
         startDate: "",
         endDate: "",
     })
+    const [user, setUser] = useState<{ username: string; role: string; credits: number; } | null>(null);
+
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+    const [selectedRole, setSelectedRole] = useState<string>('');
+    const [availableRoles, setAvailableRoles] = useState<string[]>([]);
 
 
     const dispatch = useAppDispatch()
@@ -31,6 +40,10 @@ const Search = ({ page, platform }: any) => {
     const handleSearch = () => {
         let queryParams = new URLSearchParams()
         queryParams.set('page', '1')
+
+        if (selectedRole) {
+            queryParams.set('role', selectedRole)
+        }
 
         if (search) queryParams.set('search', search)
         if (dateRange.startDate) queryParams.set("startDate", dateRange.startDate)
@@ -53,6 +66,9 @@ const Search = ({ page, platform }: any) => {
         const queryParams = new URLSearchParams(window.location.search)
         queryParams.set('sort', newOrder)
 
+        if (selectedRole) {
+            queryParams.set('role', selectedRole)
+        }
         if (search) queryParams.set('search', search)
         if (dateRange.startDate) queryParams.set("startDate", dateRange.startDate)
         if (dateRange.endDate) queryParams.set("endDate", dateRange.endDate)
@@ -102,6 +118,7 @@ const Search = ({ page, platform }: any) => {
         const urlStartDate = params.get('startDate') || ''
         const urlEndDate = params.get('endDate') || ''
         const urlSort = params.get('sort') as 'asc' | 'desc' || 'desc'
+        const urlRole = params.get('role') || ''
 
         setSearch(urlSearch)
         setDateRange({
@@ -109,7 +126,27 @@ const Search = ({ page, platform }: any) => {
             endDate: urlEndDate
         })
         setSortOrder(urlSort)
+        setSelectedRole(urlRole)
     }, [])
+
+    const handelGetUser = async () => {
+        try {
+            const user = await Cookies.get('userToken')
+            if (user) {
+                const decodedUser: any = jwt.decode(user)
+                setUser(decodedUser)
+                setAvailableRoles(rolesHierarchy(decodedUser?.role || ''));
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        handelGetUser()
+    }, []);
+
+
 
 
     return (
@@ -133,6 +170,30 @@ const Search = ({ page, platform }: any) => {
                         <SearchIcon />
                     </button>
                 </div>
+            </div>
+            <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg border dark:border-gray-600">
+                <select
+                    value={selectedRole}
+                    onChange={(e) => {
+                        setSelectedRole(e.target.value);
+                        const queryParams = new URLSearchParams(window.location.search);
+                        if (e.target.value) {
+                            queryParams.set('search', e.target.value);
+                        } else {
+                            queryParams.delete('search');
+                        }
+                        queryParams.set('page', '1');
+                        router.push(`${pathname}?${queryParams.toString()}`);
+                    }}
+                    className="bg-transparent text-sm outline-none dark:text-white w-[150px]"
+                >
+                    <option value="">All Roles</option>
+                    {availableRoles.map((role) => (
+                        <option key={role} value={role}>
+                            {role.charAt(0).toUpperCase() + role.slice(1)}
+                        </option>
+                    ))}
+                </select>
             </div>
 
             {page !== 'game' && (
