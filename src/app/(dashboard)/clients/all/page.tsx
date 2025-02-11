@@ -21,7 +21,7 @@ const page = async ({ searchParams }: any) => {
     return (
         <div className='pt-5'>
             <div className='pb-5'>
-                <Search />
+                <Search page={'client'} />
             </div>
             <Table paginationData={{
                 currentPage: clients?.currentPage, totalPage: clients?.totalPages, search: searchParams?.search, From: searchParams?.From, To: searchParams?.To, sort: searchParams?.sort, startDate: searchParams?.startDate,
