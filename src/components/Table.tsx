@@ -42,7 +42,6 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
     }
 
     const [tabledata, setTableData] = useState<TableDataItem[]>([])
-    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const [orderInputs, setOrderInputs] = useState<{ [key: string]: number }>({});
 
     const router = useRouter();
@@ -229,7 +228,7 @@ const Table = ({ data, tableData, page, gamePlatform, paginationData }: any) => 
                         </tr>
                     </thead>
                     <tbody>
-                        {tabledata?.length > 0 ? (
+                        {tabledata?.length > 0&&data?.length>0 ? (
                             tabledata?.map((item: any, ind: number) => (
                                 <tr
 
