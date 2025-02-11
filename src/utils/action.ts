@@ -596,7 +596,7 @@ export const UpdateMaintenance = async (availableAt: string) => {
 };
 
 
-export const GetAllClients = async (search: string, page: number, query?: any, sort?: string, startDate?: string, endDate?: string) => {
+export const GetAllClients = async (search: string, page: number, query?: any, sort?: string, startDate?: string, endDate?: string, role?: string) => {
   const token = await getCookie();
   try {
     let filterQuery = '';
@@ -610,9 +610,11 @@ export const GetAllClients = async (search: string, page: number, query?: any, s
 
     // Add date range parameters to URL if provided
     const dateParams = startDate && endDate ? `&startDate=${startDate}&endDate=${endDate}` : '';
+    const roleParam = role ? `&role=${role}` : '';
+
 
     const response = await fetch(
-      `${config.server}/api/users/all?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort}${dateParams}`,
+      `${config.server}/api/users/all?filter=${search}&page=${page}&search=${filterQuery}&sort=${sort}${dateParams}${roleParam}`,
       {
         method: "GET",
         credentials: "include",
